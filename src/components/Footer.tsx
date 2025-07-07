@@ -14,8 +14,8 @@ const Footer = () => {
               className="h-12 w-auto mb-4 filter brightness-0 invert"
             />
             <p className="text-gray-300 leading-relaxed mb-4 max-w-md">
-              Refresh is dedicated to bringing you the finest natural products, 
-              sourced responsibly and delivered fresh to support your healthy lifestyle.
+              Refresh Robotics is pioneering the future of agriculture with intelligent 
+              automation solutions that increase efficiency and reduce labor costs.
             </p>
           </div>
 
@@ -24,8 +24,8 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li><a href="#home" className="text-gray-300 hover:text-green-400 transition-colors">Home</a></li>
-              <li><a href="#products" className="text-gray-300 hover:text-green-400 transition-colors">Products</a></li>
-              <li><a href="#about" className="text-gray-300 hover:text-green-400 transition-colors">About</a></li>
+              <li><a href="#products" className="text-gray-300 hover:text-green-400 transition-colors">Product</a></li>
+              <li><a href="#about" className="text-gray-300 hover:text-green-400 transition-colors">Technology</a></li>
               <li><a href="#contact" className="text-gray-300 hover:text-green-400 transition-colors">Contact</a></li>
             </ul>
           </div>
@@ -34,19 +34,19 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Contact</h3>
             <ul className="space-y-2 text-gray-300">
-              <li>+1 (555) 123-4567</li>
-              <li>hello@refresh.com</li>
-              <li>123 Fresh Street<br />Natural City, NC 12345</li>
+              <li>+1 (555) ROBOT-ARM</li>
+              <li>info@refreshrobotics.com</li>
+              <li>456 Innovation Drive<br />Tech Valley, CA 94301</li>
             </ul>
           </div>
         </div>
 
         <div className="border-t border-gray-700 mt-8 pt-8 text-center">
           <p className="text-gray-300 flex items-center justify-center">
-            Made with <Heart className="text-red-500 mx-1" size={16} /> by Refresh Team
+            Made with <Heart className="text-red-500 mx-1" size={16} /> by Refresh Robotics Team
           </p>
           <p className="text-gray-400 text-sm mt-2">
-            © 2024 Refresh. All rights reserved.
+            © 2024 Refresh Robotics. All rights reserved.
           </p>
         </div>
       </div>

@@ -1,5 +1,6 @@
 
 import { useEffect, useRef, useState } from 'react';
+import { Cpu, Zap, Target } from 'lucide-react';
 
 const ProductsSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -22,21 +23,24 @@ const ProductsSection = () => {
     return () => observer.disconnect();
   }, []);
 
-  const products = [
+  const features = [
     {
-      title: "Fresh Organic Produce",
-      description: "Hand-picked, pesticide-free fruits and vegetables sourced from local organic farms.",
-      image: "https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+      icon: Target,
+      title: "Precision Harvesting",
+      description: "Advanced computer vision and AI algorithms enable precise fruit and vegetable harvesting with minimal waste.",
+      image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
     },
     {
-      title: "Premium Smoothie Blends",
-      description: "Nutrient-rich smoothie mixes made from the freshest ingredients for your daily wellness.",
-      image: "https://images.unsplash.com/photo-1570197788417-0e82375c9371?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+      icon: Zap,
+      title: "Automated Operations",
+      description: "24/7 operation capability with intelligent task scheduling and autonomous navigation between crop rows.",
+      image: "https://images.unsplash.com/photo-1465379944081-7f47de8d74ac?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
     },
     {
-      title: "Natural Wellness Products",
-      description: "Pure, natural supplements and wellness products to support your healthy lifestyle.",
-      image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+      icon: Cpu,
+      title: "Smart Integration",
+      description: "Seamless integration with existing farm management systems and IoT sensors for data-driven decisions.",
+      image: "https://images.unsplash.com/photo-1452378174528-3090a4bba7b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
     }
   ];
 
@@ -47,44 +51,50 @@ const ProductsSection = () => {
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}>
           <h2 className="text-4xl sm:text-5xl font-bold text-gray-800 mb-4">
-            Our Fresh Products
+            Agricultural Robotics Arm
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Discover our carefully curated selection of premium, natural products 
-            designed to refresh and revitalize your lifestyle.
+            Our state-of-the-art robotics arm brings precision, efficiency, and 
+            automation to modern farming operations.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map((product, index) => (
-            <div 
-              key={index}
-              className={`bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all duration-1000 hover:scale-105 hover:shadow-xl ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
-              style={{ transitionDelay: `${index * 200}ms` }}
-            >
-              <div className="relative overflow-hidden">
-                <img 
-                  src={product.image} 
-                  alt={product.title}
-                  className="w-full h-64 object-cover transition-transform duration-500 hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+          {features.map((feature, index) => {
+            const IconComponent = feature.icon;
+            return (
+              <div 
+                key={index}
+                className={`bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all duration-1000 hover:scale-105 hover:shadow-xl ${
+                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                }`}
+                style={{ transitionDelay: `${index * 200}ms` }}
+              >
+                <div className="relative overflow-hidden">
+                  <img 
+                    src={feature.image} 
+                    alt={feature.title}
+                    className="w-full h-64 object-cover transition-transform duration-500 hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                  <div className="absolute top-4 right-4 bg-green-600 text-white p-3 rounded-full">
+                    <IconComponent size={24} />
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-2xl font-bold text-gray-800 mb-3">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-600 mb-4 leading-relaxed">
+                    {feature.description}
+                  </p>
+                  <button className="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition-colors font-medium">
+                    Learn More
+                  </button>
+                </div>
               </div>
-              <div className="p-6">
-                <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                  {product.title}
-                </h3>
-                <p className="text-gray-600 mb-4 leading-relaxed">
-                  {product.description}
-                </p>
-                <button className="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition-colors font-medium">
-                  Learn More
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

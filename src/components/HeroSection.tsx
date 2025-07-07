@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Tractor } from 'lucide-react';
 
 const HeroSection = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -22,6 +22,9 @@ const HeroSection = () => {
       {/* Decorative elements */}
       <div className="absolute top-20 left-10 w-32 h-32 bg-green-200 rounded-full opacity-20 animate-pulse" />
       <div className="absolute bottom-20 right-10 w-48 h-48 bg-green-300 rounded-full opacity-10 animate-pulse delay-1000" />
+      <div className="absolute top-1/2 right-20 text-green-200 opacity-30">
+        <Tractor size={60} />
+      </div>
       
       <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
         <div className="animate-fade-in">
@@ -35,21 +38,21 @@ const HeroSection = () => {
           </div>
           
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold text-gray-800 mb-6 leading-tight">
-            Pure. Natural.
-            <span className="text-green-600 block">Refreshing.</span>
+            Automated. Precise.
+            <span className="text-green-600 block">Revolutionary.</span>
           </h1>
           
           <p className="text-xl sm:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Experience the finest quality products, sourced directly from nature 
-            and delivered fresh to your doorstep.
+            Transform your agricultural operations with our advanced robotics arm 
+            designed for precision farming and automated crop management.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button className="bg-green-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-green-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
-              Explore Products
+              View Demo
             </button>
             <button className="border-2 border-green-600 text-green-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-green-600 hover:text-white transition-all duration-300">
-              Learn More
+              Request Quote
             </button>
           </div>
         </div>
