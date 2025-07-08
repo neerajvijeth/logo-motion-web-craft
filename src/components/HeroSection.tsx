@@ -13,15 +13,23 @@ const HeroSection = () => {
 
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background with parallax effect */}
+      {/* Enhanced Background with parallax effect */}
       <div 
-        className="absolute inset-0 bg-gradient-to-br from-green-50 via-white to-green-100"
+        className="absolute inset-0 bg-gradient-to-br from-green-50 via-emerald-50 to-green-100"
         style={{ transform: `translateY(${scrollY * 0.5}px)` }}
       />
       
-      {/* Decorative elements */}
-      <div className="absolute top-20 left-10 w-32 h-32 bg-green-200 rounded-full opacity-20 animate-pulse" />
-      <div className="absolute bottom-20 right-10 w-48 h-48 bg-green-300 rounded-full opacity-10 animate-pulse delay-1000" />
+      {/* Background pattern overlay */}
+      <div className="absolute inset-0 bg-pattern opacity-30" />
+      
+      {/* Animated gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-green-100/40 via-transparent to-green-50/40 animate-pulse" style={{ animationDuration: '4s' }} />
+      
+      {/* Enhanced decorative elements */}
+      <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-green-200 to-green-300 rounded-full opacity-20 animate-pulse" />
+      <div className="absolute bottom-20 right-10 w-48 h-48 bg-gradient-to-br from-emerald-200 to-green-400 rounded-full opacity-10 animate-pulse delay-1000" />
+      <div className="absolute top-1/3 left-20 w-24 h-24 bg-gradient-to-br from-green-300 to-emerald-300 rounded-full opacity-15 animate-pulse delay-500" />
+      <div className="absolute bottom-1/3 left-10 w-16 h-16 bg-gradient-to-br from-emerald-200 to-green-200 rounded-full opacity-25 animate-pulse delay-2000" />
       <div className="absolute top-1/2 right-20 text-green-200 opacity-30">
         <Tractor size={60} />
       </div>
@@ -37,7 +45,7 @@ const HeroSection = () => {
             />
           </div>
           
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold text-gray-800 mb-6 leading-tight">
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold text-gray-800 mb-6 leading-tight text-shadow">
             Automated. Precise.
             <span className="text-green-600 block">Revolutionary.</span>
           </h1>
