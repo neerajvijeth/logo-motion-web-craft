@@ -19,22 +19,22 @@ const Header = () => {
       isScrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
     }`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20 sm:h-24">
-          {/* Logo - Made larger */}
+        <div className="flex items-center justify-between h-16 sm:h-20">
+          {/* Logo */}
           <div className="flex items-center">
             <img 
               src="/lovable-uploads/6a15e91c-f372-4075-b626-ce095ce25ae6.png" 
               alt="Refresh Logo" 
-              className="h-12 sm:h-16 w-auto"
+              className="h-8 sm:h-10 w-auto"
             />
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="/" className="text-gray-700 hover:text-green-600 transition-colors font-medium">Home</a>
+            <a href="#home" className="text-gray-700 hover:text-green-600 transition-colors font-medium">Home</a>
             <a href="#products" className="text-gray-700 hover:text-green-600 transition-colors font-medium">Products</a>
-            <a href="/about" className="text-gray-700 hover:text-green-600 transition-colors font-medium">About</a>
-            <a href="/contact" className="text-gray-700 hover:text-green-600 transition-colors font-medium">Contact</a>
+            <a href="#about" className="text-gray-700 hover:text-green-600 transition-colors font-medium">About</a>
+            <a href="#contact" className="text-gray-700 hover:text-green-600 transition-colors font-medium">Contact</a>
             <button className="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition-colors font-medium">
               Order Now
             </button>
@@ -53,10 +53,10 @@ const Header = () => {
         {isMobileMenuOpen && (
           <div className="md:hidden bg-white border-t border-gray-200 py-4">
             <nav className="flex flex-col space-y-4">
-              <a href="/" className="text-gray-700 hover:text-green-600 transition-colors font-medium px-4">Home</a>
+              <a href="#home" className="text-gray-700 hover:text-green-600 transition-colors font-medium px-4">Home</a>
               <a href="#products" className="text-gray-700 hover:text-green-600 transition-colors font-medium px-4">Products</a>
-              <a href="/about" className="text-gray-700 hover:text-green-600 transition-colors font-medium px-4">About</a>
-              <a href="/contact" className="text-gray-700 hover:text-green-600 transition-colors font-medium px-4">Contact</a>
+              <a href="#about" className="text-gray-700 hover:text-green-600 transition-colors font-medium px-4">About</a>
+              <a href="#contact" className="text-gray-700 hover:text-green-600 transition-colors font-medium px-4">Contact</a>
               <button className="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition-colors font-medium mx-4 w-fit">
                 Order Now
               </button>
