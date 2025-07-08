@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { ChevronDown, Tractor } from 'lucide-react';
+import { ChevronDown, Tractor, ArrowRight, PlayCircle } from 'lucide-react';
 
 const HeroSection = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -73,11 +73,13 @@ const HeroSection = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button className="bg-green-500/90 backdrop-blur-sm text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-green-600 transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-green-400/25 border border-green-400/30">
-              View Demo
+            <button className="bg-green-500/90 backdrop-blur-sm text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-green-600 transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-green-400/25 border border-green-400/30 flex items-center gap-2">
+              <PlayCircle size={20} />
+              Watch Demo
             </button>
-            <button className="border-2 border-green-300/80 text-green-100 px-8 py-4 rounded-full text-lg font-semibold hover:bg-green-500/80 hover:text-white transition-all duration-300 backdrop-blur-sm shadow-xl">
-              Request Quote
+            <button className="border-2 border-green-300/80 text-green-100 px-8 py-4 rounded-full text-lg font-semibold hover:bg-green-500/80 hover:text-white transition-all duration-300 backdrop-blur-sm shadow-xl flex items-center gap-2">
+              Get Started
+              <ArrowRight size={20} />
             </button>
           </div>
         </div>
