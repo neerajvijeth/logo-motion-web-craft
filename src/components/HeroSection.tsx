@@ -11,6 +11,13 @@ const HeroSection = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleGetStartedClick = () => {
+    const productsSection = document.getElementById('products');
+    if (productsSection) {
+      productsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Video Background */}
@@ -77,7 +84,10 @@ const HeroSection = () => {
               <PlayCircle size={20} />
               Watch Demo
             </button>
-            <button className="border-2 border-green-300/80 text-green-100 px-8 py-4 rounded-full text-lg font-semibold hover:bg-green-500/80 hover:text-white transition-all duration-300 backdrop-blur-sm shadow-xl flex items-center gap-2">
+            <button 
+              onClick={handleGetStartedClick}
+              className="border-2 border-green-300/80 text-green-100 px-8 py-4 rounded-full text-lg font-semibold hover:bg-green-500/80 hover:text-white transition-all duration-300 backdrop-blur-sm shadow-xl flex items-center gap-2"
+            >
               Get Started
               <ArrowRight size={20} />
             </button>
