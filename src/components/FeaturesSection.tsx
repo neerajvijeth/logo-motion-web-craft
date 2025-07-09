@@ -1,5 +1,4 @@
 
-
 import { useEffect, useRef, useState } from 'react';
 import { Cpu, Battery, Wifi, Settings } from 'lucide-react';
 
@@ -74,17 +73,9 @@ const FeaturesSection = () => {
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
                 {/* Animated border on hover */}
-                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="absolute inset-0 rounded-2xl border-2 border-transparent animate-border-move" 
-                       style={{
-                         background: 'linear-gradient(90deg, transparent 30%, #22c55e 40%, #22c55e 60%, transparent 70%)',
-                         backgroundSize: '200% 100%',
-                         mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                         maskComposite: 'xor',
-                         WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                         WebkitMaskComposite: 'xor',
-                         padding: '2px'
-                       }}>
+                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="absolute inset-0 rounded-2xl border-2 border-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <div className="absolute top-0 left-0 w-full h-0.5 bg-green-500 rounded-full animate-border-move"></div>
                   </div>
                 </div>
 
