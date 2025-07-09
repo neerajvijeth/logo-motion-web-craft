@@ -1,10 +1,12 @@
 
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -13,6 +15,10 @@ const Header = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const isActivePage = (path: string) => {
+    return location.pathname === path;
+  };
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -31,13 +37,34 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="/" className="text-gray-700 hover:text-green-600 transition-colors font-medium">Home</a>
-            <a href="#products" className="text-gray-700 hover:text-green-600 transition-colors font-medium">Products</a>
-            <a href="/about" className="text-gray-700 hover:text-green-600 transition-colors font-medium">About</a>
-            <a href="/contact" className="text-gray-700 hover:text-green-600 transition-colors font-medium">Contact</a>
-            <button className="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition-colors font-medium">
-              Order Now
-            </button>
+            <a 
+              href="/" 
+              className={`transition-colors font-medium ${
+                isActivePage('/') 
+                  ? 'text-green-600' 
+                  : 'text-gray-700 hover:text-green-600'
+              }`}
+            >
+              Home
+            </a>
+            <a 
+              href="/about" 
+              className={`transition-colors font-medium ${
+                isActivePage('/about') 
+                  ? 'text-green-600' 
+                  : 'text-gray-700 hover:text-green-600'
+              }`}
+            >
+              About
+            </a>
+            <a 
+              href="/contact" 
+              className={`bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition-colors font-medium ${
+                isActivePage('/contact') ? 'bg-green-700' : ''
+              }`}
+            >
+              Contact
+            </a>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -53,13 +80,34 @@ const Header = () => {
         {isMobileMenuOpen && (
           <div className="md:hidden bg-white border-t border-gray-200 py-4">
             <nav className="flex flex-col space-y-4">
-              <a href="/" className="text-gray-700 hover:text-green-600 transition-colors font-medium px-4">Home</a>
-              <a href="#products" className="text-gray-700 hover:text-green-600 transition-colors font-medium px-4">Products</a>
-              <a href="/about" className="text-gray-700 hover:text-green-600 transition-colors font-medium px-4">About</a>
-              <a href="/contact" className="text-gray-700 hover:text-green-600 transition-colors font-medium px-4">Contact</a>
-              <button className="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition-colors font-medium mx-4 w-fit">
-                Order Now
-              </button>
+              <a 
+                href="/" 
+                className={`font-medium px-4 transition-colors ${
+                  isActivePage('/') 
+                    ? 'text-green-600' 
+                    : 'text-gray-700 hover:text-green-600'
+                }`}
+              >
+                Home
+              </a>
+              <a 
+                href="/about" 
+                className={`font-medium px-4 transition-colors ${
+                  isActivePage('/about') 
+                    ? 'text-green-600' 
+                    : 'text-gray-700 hover:text-green-600'
+                }`}
+              >
+                About
+              </a>
+              <a 
+                href="/contact" 
+                className={`bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition-colors font-medium mx-4 w-fit ${
+                  isActivePage('/contact') ? 'bg-green-700' : ''
+                }`}
+              >
+                Contact
+              </a>
             </nav>
           </div>
         )}
