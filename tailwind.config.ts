@@ -91,14 +91,14 @@ export default {
 						transform: 'translateX(-100%)',
 						opacity: '0'
 					},
-					'10%': {
+					'20%': {
 						opacity: '1'
 					},
-					'90%': {
+					'80%': {
 						opacity: '1'
 					},
 					'100%': { 
-						transform: 'translateX(200%)',
+						transform: 'translateX(100%)',
 						opacity: '0'
 					}
 				}
@@ -106,7 +106,7 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'border-move': 'border-move 6s ease-in-out infinite'
+				'border-move': 'border-move 8s ease-in-out infinite'
 			}
 		}
 	},

@@ -73,10 +73,11 @@ const FeaturesSection = () => {
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
                 {/* Animated border on hover */}
-                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div className="absolute inset-0 rounded-2xl border-2 border-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <div className="absolute top-0 left-0 w-full h-0.5 bg-green-500 rounded-full animate-border-move"></div>
-                  </div>
+                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 overflow-hidden">
+                  <div className="absolute top-0 left-0 w-full h-0.5 bg-green-500 rounded-full animate-border-move"></div>
+                  <div className="absolute right-0 top-0 w-0.5 h-full bg-green-500 rounded-full animate-border-move" style={{ animationDelay: '1.5s' }}></div>
+                  <div className="absolute bottom-0 right-0 w-full h-0.5 bg-green-500 rounded-full animate-border-move" style={{ animationDelay: '3s' }}></div>
+                  <div className="absolute left-0 bottom-0 w-0.5 h-full bg-green-500 rounded-full animate-border-move" style={{ animationDelay: '4.5s' }}></div>
                 </div>
 
                 <div className="relative z-10">
