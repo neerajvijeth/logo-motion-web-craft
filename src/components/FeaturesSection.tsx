@@ -74,11 +74,10 @@ const FeaturesSection = () => {
               >
                 {/* Animated border on hover */}
                 <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="absolute inset-0 rounded-2xl border-2 border-transparent bg-gradient-to-r from-green-500 via-green-400 to-green-500 bg-[length:200%_200%] animate-[gradient_2s_ease-in-out_infinite]" 
+                  <div className="absolute inset-0 rounded-2xl border-2 border-transparent animate-border-move" 
                        style={{
                          background: 'linear-gradient(90deg, transparent 0%, #22c55e 50%, transparent 100%)',
                          backgroundSize: '200% 100%',
-                         animation: 'borderMove 2s linear infinite',
                          mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
                          maskComposite: 'xor',
                          WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
@@ -104,13 +103,6 @@ const FeaturesSection = () => {
           })}
         </div>
       </div>
-      
-      <style jsx>{`
-        @keyframes borderMove {
-          0% { background-position: -200% 0; }
-          100% { background-position: 200% 0; }
-        }
-      `}</style>
     </section>
   );
 };
