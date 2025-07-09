@@ -1,4 +1,5 @@
 
+
 import { useEffect, useRef, useState } from 'react';
 import { Cpu, Battery, Wifi, Settings } from 'lucide-react';
 
@@ -76,7 +77,7 @@ const FeaturesSection = () => {
                 <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <div className="absolute inset-0 rounded-2xl border-2 border-transparent animate-border-move" 
                        style={{
-                         background: 'linear-gradient(90deg, transparent 0%, #22c55e 50%, transparent 100%)',
+                         background: 'linear-gradient(90deg, transparent 30%, #22c55e 40%, #22c55e 60%, transparent 70%)',
                          backgroundSize: '200% 100%',
                          mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
                          maskComposite: 'xor',

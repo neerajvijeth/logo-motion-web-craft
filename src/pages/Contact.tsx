@@ -1,7 +1,8 @@
 
+
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Phone, Mail, MapPin, Send, Clock, MessageCircle } from 'lucide-react';
+import { Phone, Mail, MapPin, Send, MessageCircle } from 'lucide-react';
 
 const Contact = () => {
   return (
@@ -28,7 +29,7 @@ const Contact = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Info */}
-            <div>
+            <div className="bg-gray-50 rounded-2xl p-8">
               <h2 className="text-3xl font-bold text-gray-800 mb-8">Contact Information</h2>
               
               <div className="space-y-6 mb-8">
@@ -64,17 +65,6 @@ const Contact = () => {
                     <div className="text-gray-600">Tech Valley, CA 94301</div>
                   </div>
                 </div>
-                
-                <div className="flex items-center">
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
-                    <Clock className="text-green-600" size={20} />
-                  </div>
-                  <div>
-                    <div className="font-semibold text-gray-800">Business Hours</div>
-                    <div className="text-gray-600">Monday - Friday: 8:00 AM - 6:00 PM PST</div>
-                    <div className="text-gray-600">Saturday: 9:00 AM - 2:00 PM PST</div>
-                  </div>
-                </div>
               </div>
 
               {/* Quick Contact Options */}
@@ -94,7 +84,7 @@ const Contact = () => {
             </div>
 
             {/* Contact Form */}
-            <div>
+            <div className="bg-green-50 rounded-2xl p-8">
               <h2 className="text-3xl font-bold text-gray-800 mb-8">Send Us a Message</h2>
               
               <form className="space-y-6">
