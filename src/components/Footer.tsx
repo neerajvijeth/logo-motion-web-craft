@@ -9,9 +9,9 @@ const Footer = () => {
           {/* Logo and Description */}
           <div className="md:col-span-2">
             <img 
-              src="/lovable-uploads/6a15e91c-f372-4075-b626-ce095ce25ae6.png" 
+              src="/lovable-uploads/c316a4e3-055f-45ec-8e75-527099637b8c.png" 
               alt="Refresh Logo" 
-              className="h-12 w-auto mb-4 filter brightness-0 invert"
+              className="h-12 w-auto mb-4"
             />
             <p className="text-gray-300 leading-relaxed mb-4 max-w-md">
               Refresh Robotics is pioneering the future of agriculture with intelligent 

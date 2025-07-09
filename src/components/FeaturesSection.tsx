@@ -67,25 +67,50 @@ const FeaturesSection = () => {
             return (
               <div 
                 key={index}
-                className={`text-center p-6 rounded-2xl bg-gradient-to-br from-green-50 to-white border border-green-100 transform transition-all duration-1000 hover:scale-105 hover:shadow-lg ${
+                className={`text-center p-6 rounded-2xl bg-gradient-to-br from-green-50 to-white border border-green-100 transform transition-all duration-1000 hover:scale-105 hover:shadow-lg relative overflow-hidden group ${
                   isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-green-600 text-white rounded-full mb-4">
-                  <IconComponent size={28} />
+                {/* Animated border on hover */}
+                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="absolute inset-0 rounded-2xl border-2 border-transparent bg-gradient-to-r from-green-500 via-green-400 to-green-500 bg-[length:200%_200%] animate-[gradient_2s_ease-in-out_infinite]" 
+                       style={{
+                         background: 'linear-gradient(90deg, transparent 0%, #22c55e 50%, transparent 100%)',
+                         backgroundSize: '200% 100%',
+                         animation: 'borderMove 2s linear infinite',
+                         mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                         maskComposite: 'xor',
+                         WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                         WebkitMaskComposite: 'xor',
+                         padding: '2px'
+                       }}>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold text-gray-800 mb-3">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {feature.description}
-                </p>
+
+                <div className="relative z-10">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-green-600 text-white rounded-full mb-4">
+                    <IconComponent size={28} />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-3">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {feature.description}
+                  </p>
+                </div>
               </div>
             );
           })}
         </div>
       </div>
+      
+      <style jsx>{`
+        @keyframes borderMove {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+      `}</style>
     </section>
   );
 };
