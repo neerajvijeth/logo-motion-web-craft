@@ -1,10 +1,10 @@
 
+
 import { useEffect, useRef, useState } from 'react';
-import { Cpu, Battery, Wifi, Settings, Sparkles, ArrowRight } from 'lucide-react';
+import { Cpu, Battery, Wifi, Settings } from 'lucide-react';
 
 const FeaturesSection = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [activeFeature, setActiveFeature] = useState<number | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -28,57 +28,37 @@ const FeaturesSection = () => {
     {
       icon: Cpu,
       title: "AI-Powered Vision",
-      description: "Advanced machine learning algorithms identify ripe crops and optimize harvesting patterns for maximum yield and efficiency.",
-      color: "from-blue-500 to-purple-500"
+      description: "Advanced machine learning algorithms identify ripe crops and optimize harvesting patterns for maximum yield."
     },
     {
       icon: Battery,
       title: "Extended Runtime",
-      description: "High-capacity battery system provides up to 12 hours of continuous operation with fast charging capabilities.",
-      color: "from-primary to-blue-500"
+      description: "High-capacity battery system provides up to 12 hours of continuous operation with fast charging capabilities."
     },
     {
       icon: Wifi,
       title: "Remote Monitoring",
-      description: "Real-time monitoring and control through our mobile app and web dashboard for complete operational oversight.",
-      color: "from-purple-500 to-pink-500"
+      description: "Real-time monitoring and control through our mobile app and web dashboard for complete operational oversight."
     },
     {
       icon: Settings,
       title: "Easy Maintenance",
-      description: "Modular design with self-diagnostic features makes maintenance simple and minimizes downtime.",
-      color: "from-pink-500 to-primary"
+      description: "Modular design with self-diagnostic features makes maintenance simple and minimizes downtime."
     }
   ];
 
   return (
-    <section ref={sectionRef} className="py-32 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-purple-500/5 to-background" />
-      <div className="absolute inset-0 bg-grid opacity-10" />
-      
-      {/* Animated Background Orbs */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-primary/10 to-purple-500/10 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-r from-blue-500/10 to-pink-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '3s' }} />
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className={`text-center mb-20 transition-all duration-1000 ${
+    <section ref={sectionRef} className="py-20 bg-white">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className={`text-center mb-16 transition-all duration-1000 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}>
-          <div className="inline-flex items-center px-4 py-2 glass rounded-full mb-6">
-            <Sparkles className="w-4 h-4 text-primary mr-2 animate-pulse" />
-            <span className="text-sm font-medium text-primary">Advanced Technology</span>
-          </div>
-          
-          <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6">
-            <span className="text-foreground">Cutting-Edge</span>
-            <br />
-            <span className="gradient-text">Features</span>
+          <h2 className="text-4xl sm:text-5xl font-bold text-gray-800 mb-4">
+            Advanced Technology Features
           </h2>
-          
-          <p className="text-xl sm:text-2xl text-foreground/70 max-w-3xl mx-auto leading-relaxed">
-            Built with revolutionary technology to deliver reliable, efficient, 
-            and intelligent agricultural automation solutions.
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Built with cutting-edge technology to deliver reliable, efficient, 
+            and intelligent agricultural automation.
           </p>
         </div>
 
@@ -88,74 +68,40 @@ const FeaturesSection = () => {
             return (
               <div 
                 key={index}
-                className={`group relative transition-all duration-1000 ${
+                className={`text-center p-6 rounded-2xl bg-gradient-to-br from-green-50 to-white border border-green-100 transform transition-all duration-1000 hover:scale-105 hover:shadow-lg relative overflow-hidden group ${
                   isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
                 style={{ transitionDelay: `${index * 150}ms` }}
-                onMouseEnter={() => setActiveFeature(index)}
-                onMouseLeave={() => setActiveFeature(null)}
               >
-                {/* Main Card */}
-                <div className="relative h-full p-8 glass rounded-3xl border border-white/10 hover:border-primary/30 transition-all duration-500 hover-lift overflow-hidden">
-                  
-                  {/* Animated Background Gradient */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
-                  
-                  {/* Icon Container */}
-                  <div className="relative mb-6">
-                    <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} text-white relative z-10 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6`}>
-                      <IconComponent className="w-8 h-8" />
-                    </div>
-                    
-                    {/* Icon Glow Effect */}
-                    <div className={`absolute inset-0 w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500`} />
+                {/* Animated border on hover */}
+                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="absolute inset-0 rounded-2xl border-2 border-transparent animate-border-move" 
+                       style={{
+                         background: 'linear-gradient(90deg, transparent 30%, #22c55e 40%, #22c55e 60%, transparent 70%)',
+                         backgroundSize: '200% 100%',
+                         mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                         maskComposite: 'xor',
+                         WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                         WebkitMaskComposite: 'xor',
+                         padding: '2px'
+                       }}>
                   </div>
-
-                  {/* Content */}
-                  <div className="relative z-10">
-                    <h3 className="text-2xl font-bold text-foreground mb-4 group-hover:text-primary transition-colors duration-300">
-                      {feature.title}
-                    </h3>
-                    
-                    <p className="text-foreground/70 leading-relaxed mb-6">
-                      {feature.description}
-                    </p>
-
-                    {/* Learn More Button */}
-                    <button className="group/btn inline-flex items-center text-primary hover:text-primary/80 transition-colors duration-300">
-                      <span className="text-sm font-medium">Learn More</span>
-                      <ArrowRight className="ml-2 w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
-                    </button>
-                  </div>
-
-                  {/* Hover Border Animation */}
-                  <div className="absolute inset-0 rounded-3xl overflow-hidden">
-                    <div className={`absolute inset-0 border-2 border-transparent group-hover:border-gradient-to-r group-hover:${feature.color} rounded-3xl transition-all duration-500`} />
-                  </div>
-
-                  {/* Corner Accent */}
-                  <div className="absolute top-4 right-4 w-2 h-2 bg-primary/30 rounded-full group-hover:bg-primary group-hover:w-3 group-hover:h-3 transition-all duration-300" />
                 </div>
 
-                {/* External Glow on Hover */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} rounded-3xl blur-2xl opacity-0 group-hover:opacity-20 transition-all duration-500 -z-10 scale-95 group-hover:scale-100`} />
+                <div className="relative z-10">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-green-600 text-white rounded-full mb-4">
+                    <IconComponent size={28} />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-3">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {feature.description}
+                  </p>
+                </div>
               </div>
             );
           })}
-        </div>
-
-        {/* Call to Action */}
-        <div className={`text-center mt-20 transition-all duration-1000 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`} style={{ transitionDelay: '800ms' }}>
-          <button className="group relative px-10 py-5 bg-gradient-to-r from-primary to-blue-500 text-primary-foreground rounded-2xl text-lg font-semibold overflow-hidden hover-lift hover-glow transition-all duration-300">
-            <span className="relative z-10 flex items-center">
-              <Sparkles className="mr-2 w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-              Explore All Features
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-            </span>
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          </button>
         </div>
       </div>
     </section>

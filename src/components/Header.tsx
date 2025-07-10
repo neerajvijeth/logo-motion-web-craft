@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Menu, X, Zap } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 const Header = () => {
@@ -21,92 +21,81 @@ const Header = () => {
   };
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-      isScrolled 
-        ? 'glass-dark shadow-2xl border-b border-white/10' 
-        : 'bg-transparent'
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      isScrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
     }`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20 sm:h-24">
-          {/* Logo with glow effect */}
-          <div className="flex items-center space-x-3">
-            <div className="relative">
-              <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse-slow"></div>
-              <img 
-                src="/lovable-uploads/6a15e91c-f372-4075-b626-ce095ce25ae6.png" 
-                alt="eRefresh Logo" 
-                className="relative h-12 sm:h-16 w-auto hover:scale-110 transition-transform duration-300"
-              />
-            </div>
-            <div className="hidden sm:block">
-              <span className="text-2xl font-bold gradient-text">eRefresh</span>
-            </div>
+          {/* Logo - Made larger */}
+          <div className="flex items-center">
+            <img 
+              src="/lovable-uploads/6a15e91c-f372-4075-b626-ce095ce25ae6.png" 
+              alt="Refresh Logo" 
+              className="h-12 sm:h-16 w-auto"
+            />
           </div>
 
-          {/* Desktop Navigation with glass morphism */}
-          <nav className="hidden md:flex items-center space-x-2">
-            {[
-              { href: '/', label: 'Home', isActive: isActivePage('/') },
-              { href: '/about', label: 'About', isActive: isActivePage('/about') },
-            ].map((item) => (
-              <a 
-                key={item.href}
-                href={item.href} 
-                className={`relative px-6 py-3 rounded-full transition-all duration-300 font-medium overflow-hidden group ${
-                  item.isActive 
-                    ? 'text-primary bg-primary/10 glass' 
-                    : 'text-foreground/80 hover:text-primary hover:bg-primary/5'
-                }`}
-              >
-                <span className="relative z-10">{item.label}</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/20 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                {item.isActive && (
-                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1/2 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
-                )}
-              </a>
-            ))}
-            
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-8">
+            <a 
+              href="/" 
+              className={`transition-colors font-medium ${
+                isActivePage('/') 
+                  ? 'text-green-600' 
+                  : 'text-gray-700 hover:text-green-600'
+              }`}
+            >
+              Home
+            </a>
+            <a 
+              href="/about" 
+              className={`transition-colors font-medium ${
+                isActivePage('/about') 
+                  ? 'text-green-600' 
+                  : 'text-gray-700 hover:text-green-600'
+              }`}
+            >
+              About
+            </a>
             <a 
               href="/contact" 
-              className="relative ml-4 px-8 py-3 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-full font-semibold overflow-hidden group hover-lift hover-glow transition-all duration-300"
+              className={`bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition-colors font-medium ${
+                isActivePage('/contact') ? 'bg-green-700' : ''
+              }`}
             >
-              <span className="relative z-10 flex items-center">
-                <Zap size={16} className="mr-2" />
-                Contact
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              Contact
             </a>
           </nav>
 
-          {/* Enhanced Mobile Menu Button */}
+          {/* Mobile Menu Button */}
           <button 
-            className="md:hidden relative z-50 p-3 rounded-full glass transition-all duration-300 hover:bg-primary/10 group"
+            className="md:hidden p-2 relative z-50 transition-transform duration-300 hover:scale-110"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
-            <div className="relative w-6 h-6">
+            <div className="relative">
               {isMobileMenuOpen ? (
                 <X 
                   size={24} 
-                  className="absolute inset-0 text-primary transform transition-all duration-300 rotate-0 group-hover:rotate-90" 
+                  className="transform rotate-0 transition-transform duration-300 animate-in spin-in-90" 
                 />
               ) : (
                 <Menu 
                   size={24} 
-                  className="absolute inset-0 text-foreground group-hover:text-primary transition-colors duration-300" 
+                  className="transform rotate-0 transition-transform duration-300" 
                 />
               )}
             </div>
           </button>
         </div>
 
-        {/* Enhanced Mobile Menu */}
-        <div className={`md:hidden absolute top-full left-0 right-0 transition-all duration-500 ease-out ${
+        {/* Mobile Menu */}
+        <div className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
           isMobileMenuOpen 
-            ? 'opacity-100 translate-y-0 pointer-events-auto' 
-            : 'opacity-0 -translate-y-4 pointer-events-none'
+            ? 'max-h-96 opacity-100' 
+            : 'max-h-0 opacity-0'
         }`}>
-          <div className="mx-4 mt-4 glass-dark rounded-3xl border border-white/10 shadow-2xl overflow-hidden">
-            <div className="p-6 space-y-2">
+          <div className="bg-white/95 backdrop-blur-md border-t border-gray-200 py-4 rounded-b-2xl shadow-xl mx-4 mb-4">
+            <nav className="flex flex-col space-y-2 px-4">
               {[
                 { href: '/', label: 'Home', isActive: isActivePage('/') },
                 { href: '/about', label: 'About', isActive: isActivePage('/about') },
@@ -116,33 +105,44 @@ const Header = () => {
                   key={item.href}
                   href={item.href}
                   className={`
-                    block relative px-6 py-4 rounded-2xl font-medium transition-all duration-300 group overflow-hidden
-                    ${isMobileMenuOpen ? 'animate-fade-in-up' : ''}
+                    group relative font-medium px-4 py-3 rounded-xl transition-all duration-300
+                    transform hover:scale-105 hover:shadow-lg
+                    ${isMobileMenuOpen ? 'animate-in slide-in-from-left-5' : ''}
                     ${item.href === '/contact' 
-                      ? 'bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:shadow-lg hover:shadow-primary/25'
-                      : `hover:bg-primary/10 ${item.isActive ? 'text-primary bg-primary/5' : 'text-foreground/80 hover:text-primary'}`
+                      ? `bg-green-600 text-white hover:bg-green-700 hover:shadow-green-200 ${
+                          item.isActive ? 'bg-green-700' : ''
+                        }`
+                      : `text-gray-700 hover:bg-green-50 hover:text-green-600 ${
+                          item.isActive ? 'text-green-600 bg-green-50' : ''
+                        }`
                     }
                   `}
                   style={{ 
                     animationDelay: isMobileMenuOpen ? `${index * 100}ms` : '0ms',
+                    animationFillMode: 'both'
                   }}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <span className="relative z-10 flex items-center">
-                    {item.href === '/contact' && <Zap size={18} className="mr-2" />}
-                    {item.label}
-                  </span>
+                  <span className="relative z-10">{item.label}</span>
                   
-                  {/* Animated background */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-x-[-100%] group-hover:translate-x-0"></div>
+                  {/* Animated background for non-contact items */}
+                  {item.href !== '/contact' && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-green-600 rounded-xl opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+                  )}
                   
                   {/* Active indicator */}
                   {item.isActive && item.href !== '/contact' && (
-                    <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-primary to-primary/50 rounded-r-full"></div>
+                    <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-green-600 rounded-r-full animate-in slide-in-from-left-1"></div>
                   )}
+                  
+                  {/* Hover glow effect */}
+                  <div className={`
+                    absolute inset-0 rounded-xl opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-sm
+                    ${item.href === '/contact' ? 'bg-green-400' : 'bg-green-300'}
+                  `}></div>
                 </a>
               ))}
-            </div>
+            </nav>
           </div>
         </div>
       </div>
