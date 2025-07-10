@@ -18,7 +18,7 @@ const About = () => {
           <div className="text-center mb-16 animate-fade-in">
             <h1 className="text-5xl sm:text-7xl font-bold text-gray-800 mb-6">
               About <span className="text-green-600 relative">
-                Refresh Robotics
+                eRefresh Robotics
                 <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-green-600 rounded-full transform scale-x-0 animate-[scale-x-100_1s_ease-out_0.5s_forwards]"></div>
               </span>
             </h1>
@@ -68,7 +68,7 @@ const About = () => {
                 </h2>
                 <div className="space-y-6 text-lg text-gray-600 leading-relaxed">
                   <p className="transform hover:translate-x-2 transition-transform duration-300">
-                    Founded in 2020, Refresh Robotics emerged from a simple yet powerful vision: 
+                    Founded in 2020, eRefresh Robotics emerged from a simple yet powerful vision: 
                     to transform agriculture through cutting-edge robotics technology. Our team of 
                     engineers and agricultural experts recognized the growing challenges facing 
                     modern farming operations.
@@ -107,15 +107,15 @@ const About = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { icon: Target, title: "Precision", description: "Delivering accuracy in every operation", color: "from-blue-400 to-blue-600" },
-              { icon: Globe, title: "Sustainability", description: "Protecting our planet for future generations", color: "from-green-400 to-green-600" },
-              { icon: Users, title: "Partnership", description: "Working together with farmers worldwide", color: "from-purple-400 to-purple-600" },
-              { icon: Award, title: "Excellence", description: "Striving for the highest quality standards", color: "from-orange-400 to-orange-600" }
+              { icon: Target, title: "Precision", description: "Delivering accuracy in every operation" },
+              { icon: Globe, title: "Sustainability", description: "Protecting our planet for future generations" },
+              { icon: Users, title: "Partnership", description: "Working together with farmers worldwide" },
+              { icon: Award, title: "Excellence", description: "Striving for the highest quality standards" }
             ].map((value, index) => (
               <div key={index} className="group text-center">
                 <div className="relative mb-8">
-                  <div className={`w-20 h-20 bg-gradient-to-br ${value.color} rounded-2xl flex items-center justify-center mx-auto mb-6 transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg group-hover:shadow-2xl`}>
-                    <value.icon className="w-10 h-10 text-white" />
+                  <div className="w-20 h-20 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6 transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg group-hover:shadow-2xl group-hover:bg-green-600">
+                    <value.icon className="w-10 h-10 text-green-600 group-hover:text-white transition-colors duration-500" />
                   </div>
                   <div className="absolute inset-0 w-20 h-20 mx-auto bg-gradient-to-br from-green-200 to-green-400 rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 -z-10 blur-xl"></div>
                 </div>
