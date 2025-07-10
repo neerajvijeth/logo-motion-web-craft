@@ -7,20 +7,20 @@ const Footer = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and Description */}
-          <div className="md:col-span-2">
+          <div className="md:col-span-2 text-center md:text-left">
             <img 
               src="/lovable-uploads/c316a4e3-055f-45ec-8e75-527099637b8c.png" 
               alt="Refresh Logo" 
-              className="h-12 w-auto mb-4"
+              className="h-12 w-auto mb-4 mx-auto md:mx-0"
             />
-            <p className="text-gray-300 leading-relaxed mb-4 max-w-md">
+            <p className="text-gray-300 leading-relaxed mb-4 max-w-md mx-auto md:mx-0">
               Refresh Robotics is pioneering the future of agriculture with intelligent 
               automation solutions that increase efficiency and reduce labor costs.
             </p>
           </div>
 
           {/* Quick Links */}
-          <div>
+          <div className="text-center md:text-left">
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li><a href="#home" className="text-gray-300 hover:text-green-400 transition-colors">Home</a></li>
@@ -31,7 +31,7 @@ const Footer = () => {
           </div>
 
           {/* Contact Info */}
-          <div>
+          <div className="text-center md:text-left">
             <h3 className="text-lg font-semibold mb-4">Contact</h3>
             <ul className="space-y-2 text-gray-300">
               <li>+1 (555) ROBOT-ARM</li>
