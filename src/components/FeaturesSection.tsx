@@ -72,27 +72,14 @@ const FeaturesSection = () => {
                 }`}
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
-                {/* Enhanced animated border tracing effect */}
-                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div 
-                    className="absolute inset-0 rounded-2xl"
-                    style={{
-                      background: `
-                        conic-gradient(
-                          from 0deg,
-                          transparent 0deg,
-                          transparent 270deg,
-                          #22c55e 280deg,
-                          #22c55e 290deg,
-                          transparent 300deg,
-                          transparent 360deg
-                        )
-                      `,
-                      padding: '2px',
-                      animation: 'border-trace 3s linear infinite'
-                    }}
-                  >
-                    <div className="w-full h-full bg-gradient-to-br from-green-50 to-white rounded-2xl"></div>
+                {/* Simple border tracing animation */}
+                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="absolute inset-0 rounded-2xl border-2 border-transparent bg-gradient-to-r from-transparent via-green-500 to-transparent animate-border-trace" 
+                       style={{
+                         backgroundSize: '200% 2px',
+                         backgroundPosition: '-100% 0',
+                         backgroundRepeat: 'no-repeat'
+                       }}>
                   </div>
                 </div>
 

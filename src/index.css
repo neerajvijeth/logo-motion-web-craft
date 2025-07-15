@@ -129,11 +129,15 @@ All colors MUST be HSL.
 
   @keyframes border-trace {
     0% {
-      transform: rotate(0deg);
+      background-position: -100% 0;
     }
     100% {
-      transform: rotate(360deg);
+      background-position: 100% 0;
     }
+  }
+
+  .animate-border-trace {
+    animation: border-trace 2s ease-in-out infinite;
   }
 
   .text-shadow {
