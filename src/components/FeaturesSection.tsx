@@ -72,9 +72,9 @@ const FeaturesSection = () => {
                 }`}
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
-                {/* Border tracing animation around entire perimeter */}
+                {/* Smooth border tracing animation */}
                 <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-hidden">
-                  <div className="absolute inset-0 rounded-2xl animate-border-perimeter-trace"></div>
+                  <div className="absolute inset-0 rounded-2xl border-tracing-line"></div>
                 </div>
 
                 <div className="relative z-10">
