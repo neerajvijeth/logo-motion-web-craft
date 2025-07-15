@@ -1,5 +1,4 @@
 
-
 import { useEffect, useRef, useState } from 'react';
 import { Cpu, Battery, Wifi, Settings } from 'lucide-react';
 
@@ -73,23 +72,32 @@ const FeaturesSection = () => {
                 }`}
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
-                {/* Animated border on hover */}
-                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="absolute inset-0 rounded-2xl border-2 border-transparent animate-border-move" 
-                       style={{
-                         background: 'linear-gradient(90deg, transparent 30%, #22c55e 40%, #22c55e 60%, transparent 70%)',
-                         backgroundSize: '200% 100%',
-                         mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                         maskComposite: 'xor',
-                         WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                         WebkitMaskComposite: 'xor',
-                         padding: '2px'
-                       }}>
+                {/* Enhanced animated border tracing effect */}
+                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div 
+                    className="absolute inset-0 rounded-2xl"
+                    style={{
+                      background: `
+                        conic-gradient(
+                          from 0deg,
+                          transparent 0deg,
+                          transparent 270deg,
+                          #22c55e 280deg,
+                          #22c55e 290deg,
+                          transparent 300deg,
+                          transparent 360deg
+                        )
+                      `,
+                      padding: '2px',
+                      animation: 'border-trace 3s linear infinite'
+                    }}
+                  >
+                    <div className="w-full h-full bg-gradient-to-br from-green-50 to-white rounded-2xl"></div>
                   </div>
                 </div>
 
                 <div className="relative z-10">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-green-600 text-white rounded-full mb-4">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-green-600 text-white rounded-full mb-4 transform group-hover:scale-110 transition-transform duration-300">
                     <IconComponent size={28} />
                   </div>
                   <h3 className="text-xl font-bold text-gray-800 mb-3">

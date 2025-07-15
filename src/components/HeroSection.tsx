@@ -66,9 +66,11 @@ const HeroSection = () => {
         </div>
       </div>
       
-      {/* Scroll indicator - Fixed center alignment */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-20">
-        <ChevronDown className="text-green-600" size={32} />
+      {/* Perfectly centered scroll indicator */}
+      <div className="absolute bottom-8 w-full flex justify-center z-20">
+        <div className="animate-bounce">
+          <ChevronDown className="text-green-600" size={32} />
+        </div>
       </div>
     </section>
   );
