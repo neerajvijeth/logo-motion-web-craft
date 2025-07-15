@@ -95,10 +95,19 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
   }
 
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+  }
+
+  /* Prevent horizontal scrolling on all containers */
+  #root {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
   }
 }
 

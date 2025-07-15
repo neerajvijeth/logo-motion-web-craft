@@ -34,7 +34,7 @@ const HeroSection = () => {
         <Tractor size={60} />
       </div>
       
-      <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+      <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full">
         <div className="animate-fade-in">
           {/* Main Logo */}
           <div className="mb-8">
@@ -56,18 +56,18 @@ const HeroSection = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button className="bg-green-600 text-white border-2 border-green-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-white hover:text-green-600 transform hover:scale-105 transition-all duration-300">
+            <button className="bg-green-600 text-white border-2 border-green-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-white hover:text-green-600 transform hover:scale-105 transition-all duration-300 w-full sm:w-auto">
               View Demo
             </button>
-            <button className="border-2 border-green-600 text-green-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-green-600 hover:text-white transform hover:scale-105 transition-all duration-300">
+            <button className="border-2 border-green-600 text-green-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-green-600 hover:text-white transform hover:scale-105 transition-all duration-300 w-full sm:w-auto">
               Request Quote
             </button>
           </div>
         </div>
       </div>
       
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+      {/* Scroll indicator - Fixed center alignment */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-20">
         <ChevronDown className="text-green-600" size={32} />
       </div>
     </section>
