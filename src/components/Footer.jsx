@@ -1,4 +1,3 @@
-
 import { Heart } from 'lucide-react';
 
 const Footer = () => {
