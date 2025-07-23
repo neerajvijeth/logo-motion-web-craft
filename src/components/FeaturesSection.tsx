@@ -1,9 +1,10 @@
+
 import { useEffect, useRef, useState } from 'react';
 import { Cpu, Battery, Wifi, Settings } from 'lucide-react';
 
 const FeaturesSection = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(

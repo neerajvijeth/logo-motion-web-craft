@@ -1,9 +1,10 @@
+
 import { useEffect, useRef, useState } from 'react';
 import { Cpu, Zap, Target } from 'lucide-react';
 
 const ProductsSection = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(

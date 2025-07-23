@@ -1,9 +1,10 @@
+
 import { useEffect, useRef, useState } from 'react';
 import { Phone, Mail, MapPin, Send } from 'lucide-react';
 
 const ContactSection = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
