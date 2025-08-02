@@ -56,12 +56,18 @@ const HeroSection = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button className="bg-green-600 text-white border-2 border-green-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-white hover:text-green-600 transform hover:scale-105 transition-all duration-300 w-full sm:w-auto">
-              View Demo
-            </button>
-            <button className="border-2 border-green-600 text-green-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-green-600 hover:text-white transform hover:scale-105 transition-all duration-300 w-full sm:w-auto">
-              Request Quote
-            </button>
+            <a 
+              href="/auth"
+              className="bg-green-600 text-white border-2 border-green-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-white hover:text-green-600 transform hover:scale-105 transition-all duration-300 w-full sm:w-auto text-center"
+            >
+              Sign Up
+            </a>
+            <a 
+              href="/auth"
+              className="border-2 border-green-600 text-green-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-green-600 hover:text-white transform hover:scale-105 transition-all duration-300 w-full sm:w-auto text-center"
+            >
+              Login
+            </a>
           </div>
         </div>
       </div>
