@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import Header from '@/components/Header';
 
 const Farm = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -23,7 +24,7 @@ const Farm = () => {
       <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Interactive 3D Instanced Grid</title>
+          <title>Interactive 3D Farm</title>
           <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
           <script src="https://cdn.tailwindcss.com"></script>
           <style>
@@ -44,43 +45,43 @@ const Farm = () => {
                   position: absolute;
                   display: none;
                   padding: 12px;
-                  background-color: rgba(31, 41, 55, 0.8);
+                  background-color: rgba(34, 197, 94, 0.9);
                   backdrop-filter: blur(5px);
-                  border: 1px solid #4b5563;
+                  border: 1px solid #16a34a;
                   border-radius: 8px;
-                  color: #d1d5db;
+                  color: white;
                   pointer-events: none;
                   transition: opacity 0.2s;
                   z-index: 10;
               }
           </style>
       </head>
-      <body class="bg-gray-900 text-white">
+      <body style="background: linear-gradient(135deg, #065f46, #047857, #059669);">
 
           <!-- UI Overlays -->
-          <div class="absolute top-0 left-0 p-4 sm:p-6 text-gray-300 pointer-events-none w-full">
-              <h1 class="text-2xl md:text-3xl font-bold text-gray-100">Interactive Vertical Farm</h1>
-              <div id="status" class="mt-2 text-gray-400">
+          <div class="absolute top-0 left-0 p-4 sm:p-6 text-white pointer-events-none w-full">
+              <h1 class="text-xl md:text-2xl font-bold text-white">Interactive Vertical Farm</h1>
+              <div id="status" class="mt-2 text-green-100 text-sm">
                   Left-Click & Drag: Rotate | Right-Click & Drag: Pan | Scroll: Zoom
               </div>
-              <div id="selection-status" class="mt-1 text-cyan-400 h-6 font-semibold"></div>
+              <div id="selection-status" class="mt-1 text-green-200 h-5 font-semibold text-sm"></div>
           </div>
           
-          <button id="back-button" class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-opacity opacity-0 pointer-events-none">
+          <button id="back-button" class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-lg shadow-lg transition-opacity opacity-0 pointer-events-none text-sm">
               Back to Grid
           </button>
 
           <!-- Popups -->
           <div id="hover-popup-grid" class="popup">
               <h3 class="font-bold text-white mb-1">Container #<span id="popup-id"></span></h3>
-              <ul>
+              <ul class="text-sm">
                   <li>- Hydroponic Lettuce</li>
                   <li>- Basil</li>
                   <li>- Cherry Tomatoes</li>
               </ul>
           </div>
           <div id="hover-popup-plant" class="popup">
-              <p id="popup-plant-name" class="font-bold text-white"></p>
+              <p id="popup-plant-name" class="font-bold text-white text-sm"></p>
           </div>
 
           <!-- Canvas Container -->
@@ -103,7 +104,7 @@ const Farm = () => {
 
               // --- Basic Setup ---
               const scene = new THREE.Scene();
-              scene.background = new THREE.Color(0x111827); // bg-gray-900
+              scene.background = new THREE.Color(0x047857); // Green background
 
               const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
               camera.position.set(0, 80, 1); 
@@ -137,7 +138,6 @@ const Farm = () => {
               const NUM_PLANT_ROWS = 5;
               const NUM_PLANTS_PER_ROW = 5;
               const BLOCK_SPACING = 0.5;
-              // CHANGED: Colors now match the provided website theme
               const COLORS = ["#34D399", "#A7F3D0"].map(c => new THREE.Color(c)); 
               const HIGHLIGHT_COLOR = new THREE.Color("#FFFFFF");
 
@@ -167,7 +167,6 @@ const Farm = () => {
                       dummy.updateMatrix();
                       instancedMesh.setMatrixAt(instanceIdx, dummy.matrix);
 
-                      // CHANGED: Create a checkerboard pattern with the two green shades
                       const color = COLORS[(col + row) % 2];
                       instancedMesh.setColorAt(instanceIdx, color);
                       originalColors[instanceIdx] = color;
@@ -223,7 +222,7 @@ const Farm = () => {
               function createDetailView(position, color) {
                   detailGroup = new THREE.Group();
                   detailGroup.position.copy(position);
-                  detailGroup.plants = []; // Array to hold plant meshes for raycasting
+                  detailGroup.plants = [];
 
                   const shellGeo = new THREE.BoxGeometry(BLOCK_SIZE, BLOCK_HEIGHT, BLOCK_SIZE);
                   const shellMat = new THREE.MeshStandardMaterial({
@@ -285,7 +284,7 @@ const Farm = () => {
                   detailGroup.children.forEach(child => {
                       let targetOpacity = 1;
                       if (child.isMesh && child.geometry.type === 'BoxGeometry') {
-                          targetOpacity = 0.2; // Make shell transparent
+                          targetOpacity = 0.2;
                       }
                       gsap.to(child.material, { opacity: targetOpacity, duration: 0.5, delay: 0.3 });
                   });
@@ -334,13 +333,6 @@ const Farm = () => {
                       opacity: 1, duration: 0.5, delay: 0.2
                   }, 0);
               }
-
-              // --- Responsive Design ---
-              window.addEventListener('resize', () => {
-                  camera.aspect = window.innerWidth / window.innerHeight;
-                  camera.updateProjectionMatrix();
-                  renderer.setSize(window.innerWidth, window.innerHeight);
-              });
 
               // --- Animation Loop ---
               function animate() {
@@ -396,6 +388,13 @@ const Farm = () => {
                   renderer.render(scene, camera);
               }
 
+              // --- Responsive Design ---
+              window.addEventListener('resize', () => {
+                  camera.aspect = window.innerWidth / window.innerHeight;
+                  camera.updateProjectionMatrix();
+                  renderer.setSize(window.innerWidth, window.innerHeight);
+              });
+
               animate();
           </script>
 
@@ -412,10 +411,12 @@ const Farm = () => {
     containerRef.current.appendChild(iframe);
     
     // Write the content to iframe
-    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-    iframeDoc.open();
-    iframeDoc.write(farmHTML);
-    iframeDoc.close();
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (iframeDoc) {
+      iframeDoc.open();
+      iframeDoc.write(farmHTML);
+      iframeDoc.close();
+    }
 
     return () => {
       if (containerRef.current && iframe) {
@@ -427,7 +428,7 @@ const Farm = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg text-gray-600">Loading...</div>
+        <div className="text-xl">Loading...</div>
       </div>
     );
   }
@@ -437,8 +438,62 @@ const Farm = () => {
   }
 
   return (
-    <div className="w-full h-screen" ref={containerRef}>
-      {/* The 3D farm will be injected here */}
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-green-100">
+      <Header />
+      
+      {/* Hero Section */}
+      <div className="relative pt-20 pb-8 px-4">
+        <div className="max-w-6xl mx-auto text-center">
+          <div className="animate-fade-in">
+            <h1 className="text-5xl md:text-6xl font-bold text-gray-800 mb-6">
+              Interactive <span className="text-green-600">Farm Experience</span>
+            </h1>
+            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+              Explore our cutting-edge vertical farming technology. Click and interact with each growing container to see our crops in action.
+            </p>
+          </div>
+          
+          {/* Farm Container */}
+          <div className="relative mx-auto animate-fade-in delay-200">
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-green-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-4">
+                <h2 className="text-2xl font-bold">3D Interactive Farm</h2>
+                <p className="text-green-100">Click containers to explore • Drag to rotate • Scroll to zoom</p>
+              </div>
+              <div 
+                ref={containerRef}
+                className="w-full h-[500px] md:h-[600px] bg-gradient-to-br from-green-800 to-emerald-800"
+                style={{ position: 'relative' }}
+              />
+            </div>
+          </div>
+          
+          {/* Features Grid */}
+          <div className="mt-16 grid md:grid-cols-3 gap-8 max-w-4xl mx-auto animate-fade-in delay-400">
+            <div className="bg-white/60 backdrop-blur-sm rounded-xl p-6 border border-green-200">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🌱</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">Hydroponic Growing</h3>
+              <p className="text-gray-600">Soil-free growing system with optimal nutrient delivery</p>
+            </div>
+            <div className="bg-white/60 backdrop-blur-sm rounded-xl p-6 border border-green-200">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🏗️</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">Vertical Design</h3>
+              <p className="text-gray-600">Maximized growing space in minimal footprint</p>
+            </div>
+            <div className="bg-white/60 backdrop-blur-sm rounded-xl p-6 border border-green-200">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🤖</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">AI Automation</h3>
+              <p className="text-gray-600">Smart monitoring and automated care systems</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
