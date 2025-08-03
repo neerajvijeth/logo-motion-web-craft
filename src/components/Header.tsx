@@ -96,7 +96,7 @@ const Header = () => {
                   Login
                 </a>
                 <a 
-                  href="/auth" 
+                  href="/auth?mode=signup" 
                   className="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition-colors font-medium"
                 >
                   Sign Up
@@ -140,7 +140,7 @@ const Header = () => {
                 { href: '/contact', label: 'Contact', isActive: isActivePage('/contact') },
                 ...(user ? [{ href: '#', label: 'Logout', isActive: false, isLogout: true }] : [
                   { href: '/auth', label: 'Login', isActive: isActivePage('/auth') },
-                  { href: '/auth', label: 'Sign Up', isActive: isActivePage('/auth'), isSignUp: true }
+                  { href: '/auth?mode=signup', label: 'Sign Up', isActive: isActivePage('/auth'), isSignUp: true }
                 ])
               ].map((item, index) => {
                 if (item.isLogout) {
