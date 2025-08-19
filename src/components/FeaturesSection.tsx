@@ -31,13 +31,13 @@ const FeaturesSection = () => {
     },
     {
       icon: Battery,
-      title: "Extended Runtime",
-      description: "High-capacity battery system provides up to 12 hours of continuous operation with fast charging capabilities."
+      title: "Automated Operations",
+      description: "24/7 operation capability with intelligent task scheduling and autonomous navigation between crop rows."
     },
     {
       icon: Wifi,
       title: "Remote Monitoring",
-      description: "Real-time monitoring and control through our mobile app and web dashboard for complete operational oversight."
+      description: "Real-time supervision and control is set-up for complete operational oversight."
     },
     {
       icon: Settings,

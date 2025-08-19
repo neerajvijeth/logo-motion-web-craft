@@ -25,7 +25,7 @@ const Footer = () => {
             <ul className="space-y-2">
               <li><a href="#home" className="text-gray-300 hover:text-green-400 transition-colors">Home</a></li>
               <li><a href="#products" className="text-gray-300 hover:text-green-400 transition-colors">Product</a></li>
-              <li><a href="#about" className="text-gray-300 hover:text-green-400 transition-colors">Technology</a></li>
+              <li><a href="/about" className="text-gray-300 hover:text-green-400 transition-colors">Technology</a></li>
               <li><a href="#contact" className="text-gray-300 hover:text-green-400 transition-colors">Contact</a></li>
             </ul>
           </div>
@@ -35,7 +35,7 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Contact</h3>
             <ul className="space-y-2 text-gray-300">
               <li>+1 (555) ROBOT-ARM</li>
-              <li>info@refreshrobotics.com</li>
+              <li>elomelorefresh@gmail.com</li>
               <li>456 Innovation Drive<br />Tech Valley, CA 94301</li>
             </ul>
           </div>

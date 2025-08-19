@@ -35,10 +35,10 @@ const About = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {[
-              { number: "500+", label: "Farms Automated", icon: TrendingUp },
+              { number: "1", label: "Farms Automated", icon: TrendingUp },
               { number: "99.9%", label: "Uptime Reliability", icon: CheckCircle },
-              { number: "2020", label: "Year Founded", icon: Lightbulb },
-              { number: "50+", label: "Team Members", icon: Users }
+              { number: "2025", label: "Year Founded", icon: Lightbulb },
+              { number: "10", label: "Team Members", icon: Users }
             ].map((stat, index) => (
               <div key={index} className="text-center group">
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4 group-hover:bg-green-600 transition-all duration-500 group-hover:scale-110">
@@ -82,7 +82,7 @@ const About = () => {
               </div>
             </div>
             
-            <div className="relative">
+            {/* <div className="relative">
               <div className="bg-gradient-to-br from-green-100 to-green-200 rounded-3xl p-12 text-center relative overflow-hidden group hover:shadow-2xl transition-all duration-500">
                 <div className="absolute inset-0 bg-gradient-to-br from-green-400 to-green-600 opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
                 <Award className="w-20 h-20 text-green-600 mx-auto mb-6 transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-500" />
@@ -90,7 +90,7 @@ const About = () => {
                 <p className="text-gray-600 text-lg">AgTech Innovation of the Year 2023</p>
                 <div className="absolute -top-4 -right-4 w-24 h-24 bg-green-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 group-hover:scale-150 transition-transform duration-700"></div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
@@ -139,8 +139,7 @@ const About = () => {
             <Heart className="w-16 h-16 mx-auto mb-8 text-green-200 animate-pulse" />
             <h2 className="text-4xl sm:text-5xl font-bold mb-8">Our Mission</h2>
             <p className="text-xl leading-relaxed mb-8 text-green-100">
-              To empower farmers worldwide with intelligent robotic solutions that increase productivity, 
-              reduce costs, and promote sustainable agricultural practices for a better tomorrow.
+              To ensure every human being has access to the freshest, safest, and most nutritious produce, every single day of the year alongside empowering farmers worldwide with intelligent robotic solutions that increase productivity, reduce costs, and promote sustainable agricultural practices for a better tomorrow. We are committed to building a food-secure future for our communities, one harvest at a time.
             </p>
             <div className="inline-block bg-white/10 backdrop-blur-sm rounded-full px-8 py-4 border border-white/20">
               <p className="text-lg font-semibold">Building the Future of Farming, Today</p>

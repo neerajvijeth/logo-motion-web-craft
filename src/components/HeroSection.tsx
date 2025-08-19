@@ -51,8 +51,8 @@ const HeroSection = () => {
           </h1>
           
           <p className="text-xl sm:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Transform your agricultural operations with our advanced robotics arm 
-            designed for precision farming and automated crop management.
+            India's first fully automated vertical farm, delivering exceptionally fresh, 
+            pesticide-free produce to your table, 365 days a year.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
