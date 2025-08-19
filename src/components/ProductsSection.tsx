@@ -1,8 +1,6 @@
 
 import { useEffect, useRef, useState } from 'react';
-import { Cpu, Shield, Calendar, Target } from 'lucide-react';
-import leafShieldImage from '../assets/leaf-shield.jpg';
-import calendar365Image from '../assets/calendar-365.jpg';
+import { Shield, Calendar, Target } from 'lucide-react';
 
 const ProductsSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -36,13 +34,13 @@ const ProductsSection = () => {
       icon: Shield,
       title: "Pure & Pesticide-Free",
       description: "Grown in a pristine, controlled environment. Absolutely no pesticides, herbicides, or harmful chemicals. Just pure, clean yield.",
-      image: leafShieldImage
+      image: "/src/assets/leaf-shield.jpg"
     },
     {
       icon: Calendar,
       title: "Available Year-Round",
       description: "Rain or shine, summer heat or monsoon, we guarantee a fresh harvest every single day of the year. No more seasonal dependencies.",
-      image: calendar365Image
+      image: "/src/assets/calendar-365.jpg"
     }
   ];
 
