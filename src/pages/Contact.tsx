@@ -33,7 +33,7 @@ const Contact = () => {
               <h2 className="text-3xl font-bold text-gray-800 mb-8">Contact Information</h2>
               
               <div className="space-y-6 mb-8">
-                {/* <div className="flex items-center">
+                <div className="flex items-center">
                   <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
                     <Phone className="text-green-600" size={20} />
                   </div>
@@ -42,7 +42,7 @@ const Contact = () => {
                     <div className="text-gray-600">+1 (555) ROBOT-ARM</div>
                     <div className="text-gray-600">+1 (555) 762-6827</div>
                   </div>
-                </div> */}
+                </div>
                 
                 <div className="flex items-center">
                   <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
@@ -50,11 +50,12 @@ const Contact = () => {
                   </div>
                   <div>
                     <div className="font-semibold text-gray-800">Email</div>
-                    <div className="text-gray-600">elomelorefresh@gmail.com</div>
+                    <div className="text-gray-600">info@refreshrobotics.com</div>
+                    <div className="text-gray-600">support@refreshrobotics.com</div>
                   </div>
                 </div>
                 
-                {/* <div className="flex items-center">
+                <div className="flex items-center">
                   <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
                     <MapPin className="text-green-600" size={20} />
                   </div>
@@ -63,11 +64,11 @@ const Contact = () => {
                     <div className="text-gray-600">456 Innovation Drive</div>
                     <div className="text-gray-600">Tech Valley, CA 94301</div>
                   </div>
-                </div> */}
+                </div>
               </div>
 
               {/* Quick Contact Options */}
-              {/* <div className="bg-green-50 rounded-2xl p-6">
+              <div className="bg-green-50 rounded-2xl p-6">
                 <h3 className="text-xl font-bold text-gray-800 mb-4">Quick Contact</h3>
                 <div className="space-y-3">
                   <button className="w-full bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center justify-center">
@@ -79,7 +80,7 @@ const Contact = () => {
                     Live Chat
                   </button>
                 </div>
-              </div> */}
+              </div>
             </div>
 
             {/* Contact Form */}

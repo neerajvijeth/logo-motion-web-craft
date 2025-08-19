@@ -44,7 +44,7 @@ const ContactSection = () => {
           }`}>
             <h3 className="text-2xl font-bold mb-8">Contact Information</h3>
             <div className="space-y-6">
-              {/* <div className="flex items-center">
+              <div className="flex items-center">
                 <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mr-4">
                   <Phone size={20} />
                 </div>
@@ -52,17 +52,17 @@ const ContactSection = () => {
                   <div className="font-semibold">Phone</div>
                   <div className="text-green-100">+1 (555) 123-4567</div>
                 </div>
-              </div> */}
+              </div>
               <div className="flex items-center">
                 <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mr-4">
                   <Mail size={20} />
                 </div>
                 <div>
                   <div className="font-semibold">Email</div>
-                  <div className="text-green-100">elomelorefresh@gmail.com</div>
+                  <div className="text-green-100">hello@refresh.com</div>
                 </div>
               </div>
-              {/* <div className="flex items-center">
+              <div className="flex items-center">
                 <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mr-4">
                   <MapPin size={20} />
                 </div>
@@ -70,7 +70,7 @@ const ContactSection = () => {
                   <div className="font-semibold">Address</div>
                   <div className="text-green-100">123 Fresh Street, Natural City, NC 12345</div>
                 </div>
-              </div> */}
+              </div>
             </div>
           </div>
 
