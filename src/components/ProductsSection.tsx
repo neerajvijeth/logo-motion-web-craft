@@ -1,6 +1,6 @@
 
 import { useEffect, useRef, useState } from 'react';
-import { Shield, Calendar, Target } from 'lucide-react';
+import { Cpu, Zap, Target } from 'lucide-react';
 
 const ProductsSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -31,16 +31,16 @@ const ProductsSection = () => {
       image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
     },
     {
-      icon: Shield,
-      title: "Pure & Pesticide-Free",
-      description: "Grown in a pristine, controlled environment. Absolutely no pesticides, herbicides, or harmful chemicals. Just pure, clean yield.",
-      image: "/src/assets/leaf-shield.jpg"
+      icon: Zap,
+      title: "Automated Operations",
+      description: "24/7 operation capability with intelligent task scheduling and autonomous navigation between crop rows.",
+      image: "https://images.unsplash.com/photo-1465379944081-7f47de8d74ac?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
     },
     {
-      icon: Calendar,
-      title: "Available Year-Round",
-      description: "Rain or shine, summer heat or monsoon, we guarantee a fresh harvest every single day of the year. No more seasonal dependencies.",
-      image: "/src/assets/calendar-365.jpg"
+      icon: Cpu,
+      title: "Smart Integration",
+      description: "Seamless integration with existing farm management systems and IoT sensors for data-driven decisions.",
+      image: "https://images.unsplash.com/photo-1452378174528-3090a4bba7b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
     }
   ];
 
