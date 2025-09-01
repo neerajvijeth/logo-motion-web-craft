@@ -1,183 +1,120 @@
-import { useEffect, useRef } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
-import Header from '@/components/Header';
+import { useState, useEffect, useRef } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Minus, Plus, ShoppingCart } from "lucide-react";
 
-const Farm = () => {
-  const { user, loading } = useAuth();
-  const navigate = useNavigate();
+interface CartItem {
+  id: string;
+  name: string;
+  container: string;
+  quantity?: number;
+}
+
+interface CartState {
+  items: CartItem[];
+  count: number;
+}
+
+export const FarmInteractive = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate('/auth');
-    }
-  }, [user, loading, navigate]);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Create iframe element
-    const iframe = document.createElement('iframe');
-    iframe.style.width = '100%';
-    iframe.style.height = '100%';
-    iframe.style.border = 'none';
-    iframe.style.borderRadius = '12px';
-
-    // HTML content for the 3D farm
-    const htmlContent = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Vertical Farm</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-            font-family: 'Inter', sans-serif;
-        }
-        #canvas-container {
-            width: 100%;
-            height: 100%;
-            display: block;
-            cursor: pointer;
-        }
-        .popup {
-            position: absolute;
-            display: none;
-            padding: 8px 12px;
-            background-color: rgba(1, 22, 13, 0.8);
-            backdrop-filter: blur(5px);
-            border: 1px solid #15803d;
-            border-radius: 8px;
-            color: #d1d5db;
-            z-index: 10;
-            pointer-events: none;
-            transform: translate(15px, 15px);
-        }
-        .form-input {
-            background-color: #052e16;
-            border: 1px solid #065f46;
-            color: #ecfdf5;
-        }
-        .form-input:focus {
-            outline: none;
-            border-color: #34d399;
-            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.5);
-        }
-    </style>
-</head>
-<body class="bg-green-950 text-white">
-
-    <div class="container mx-auto p-4 sm:p-8">
+    // Create and inject the farm HTML content
+    const farmHTML = `
+      <div class="container mx-auto p-4 sm:p-8">
         <!-- Header -->
         <header class="text-center mb-8">
-            <h1 class="text-4xl md:text-5xl font-bold text-green-100">The Future of Farming</h1>
-            <p class="mt-2 text-lg text-green-300">Select your fresh, locally-grown produce directly from our interactive vertical farm.</p>
+          <h1 class="text-4xl md:text-5xl font-bold text-green-100">The Future of Farming</h1>
+          <p class="mt-2 text-lg text-green-300">Select your fresh, locally-grown produce directly from our interactive vertical farm.</p>
         </header>
 
         <!-- Main Interactive Section -->
         <main class="relative">
-            <!-- 3D Canvas Card -->
-            <div class="w-full max-w-6xl mx-auto aspect-video rounded-xl overflow-hidden shadow-2xl shadow-green-900/50 border-2 border-green-800">
-                 <div id="canvas-container"></div>
-            </div>
-           
-            <!-- UI Overlays for the Canvas -->
-            <div class="absolute top-0 left-0 p-4 sm:p-6 text-gray-300 pointer-events-none w-full z-10">
-                <div id="selection-status" class="text-lime-400 h-6 font-semibold"></div>
-            </div>
-            <button id="back-button" class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-opacity opacity-0 pointer-events-none z-10">
-                Back to Grid
-            </button>
+          <!-- 3D Canvas Card -->
+          <div class="w-full max-w-4xl mx-auto h-[500px] rounded-xl overflow-hidden shadow-lg border border-green-800">
+             <div id="canvas-container"></div>
+          </div>
+         
+          <!-- UI Overlays for the Canvas -->
+          <div class="absolute top-0 left-0 p-4 sm:p-6 text-gray-300 pointer-events-none w-full z-10">
+            <div id="selection-status" class="text-lime-400 h-6 font-semibold"></div>
+          </div>
+          <button id="back-button" class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-opacity opacity-0 pointer-events-none z-10">
+            Back to Grid
+          </button>
         </main>
+      </div>
 
-        <!-- Cart and Checkout Section -->
-        <section class="mt-12 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-            <!-- Cart -->
-            <div class="bg-green-900/50 border border-green-800 rounded-xl p-6">
-                <h2 class="text-2xl font-bold text-green-100 border-b border-green-700 pb-3 mb-4">Your Cart</h2>
-                <div id="cart-summary" class="flex justify-between items-center text-lg mb-4">
-                    <span>Total Items:</span>
-                    <span id="cart-count" class="font-bold text-lime-400">0</span>
-                </div>
-                
-                <!-- Confirmation Section (Moved Here) -->
-                <div id="confirmation-section" class="hidden mb-4 pb-4 border-b border-green-700">
-                     <h3 class="text-base font-bold text-white">Confirm Action</h3>
-                     <p class="text-sm text-gray-300"><span class="font-semibold">Plant:</span> <span id="confirm-plant-name"></span></p>
-                     <button id="confirm-action-button" type="button" class="mt-2 w-full text-white font-bold py-2 px-4 rounded transition-colors">
-                        Confirm
-                    </button>
-                </div>
+      <!-- Popups for 3D Scene -->
+      <div id="hover-popup-grid" class="popup"></div>
+      <div id="hover-popup-plant" class="popup !transform-none"></div>
+    `;
 
-                <ul id="cart-items-list" class="space-y-2 h-48 overflow-y-auto pr-2">
-                    <!-- Cart items will be dynamically added here -->
-                     <p id="cart-placeholder" class="text-green-300">Your cart is empty. Click on a container to start selecting plants!</p>
-                </ul>
-                <button id="clear-cart-button" class="mt-4 w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-2 px-4 rounded-lg shadow-lg transition-colors">
-                    Clear Cart
-                </button>
-            </div>
+    containerRef.current.innerHTML = farmHTML;
 
-            <!-- Checkout -->
-            <div class="bg-green-900/50 border border-green-800 rounded-xl p-6">
-                <h2 class="text-2xl font-bold text-green-100 border-b border-green-700 pb-3 mb-4">Checkout</h2>
-                <form id="checkout-form">
-                    <div class="space-y-4">
-                        <div>
-                            <label for="name" class="block text-sm font-medium text-green-200">Full Name</label>
-                            <input type="text" id="name" name="name" class="form-input mt-1 block w-full rounded-md shadow-sm" required>
-                        </div>
-                        <div>
-                            <label for="address" class="block text-sm font-medium text-green-200">Delivery Address</label>
-                            <input type="text" id="address" name="address" class="form-input mt-1 block w-full rounded-md shadow-sm" required>
-                        </div>
-                        <div>
-                            <label for="card-number" class="block text-sm font-medium text-green-200">Card Number</label>
-                            <input type="text" id="card-number" name="card-number" class="form-input mt-1 block w-full rounded-md shadow-sm" placeholder="•••• •••• •••• ••••" required>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label for="expiry" class="block text-sm font-medium text-green-200">Expiry (MM/YY)</label>
-                                <input type="text" id="expiry" name="expiry" class="form-input mt-1 block w-full rounded-md shadow-sm" placeholder="MM/YY" required>
-                            </div>
-                            <div>
-                                <label for="cvv" class="block text-sm font-medium text-green-200">CVV</label>
-                                <input type="text" id="cvv" name="cvv" class="form-input mt-1 block w-full rounded-md shadow-sm" placeholder="•••" required>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="submit" class="mt-6 w-full bg-lime-600 hover:bg-lime-500 text-white font-bold py-3 px-4 rounded-lg shadow-lg text-lg transition-colors">
-                        Place Order
-                    </button>
-                </form>
-            </div>
-        </section>
-    </div>
+    // Create and inject styles
+    const style = document.createElement('style');
+    style.textContent = `
+      body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+        font-family: 'Inter', sans-serif;
+      }
+      #canvas-container {
+        width: 100%;
+        height: 100%;
+        display: block;
+        cursor: pointer;
+      }
+      .popup {
+        position: absolute;
+        display: none;
+        padding: 8px 12px;
+        background-color: rgba(1, 22, 13, 0.8);
+        backdrop-filter: blur(5px);
+        border: 1px solid #15803d;
+        border-radius: 8px;
+        color: #d1d5db;
+        z-index: 10;
+        pointer-events: none;
+        transform: translate(15px, 15px);
+      }
+      .form-input {
+        background-color: #052e16;
+        border: 1px solid #065f46;
+        color: #ecfdf5;
+      }
+      .form-input:focus {
+        outline: none;
+        border-color: #34d399;
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.5);
+      }
+    `;
+    document.head.appendChild(style);
 
-    <!-- Popups for 3D Scene -->
-    <div id="hover-popup-grid" class="popup"></div>
-    <div id="hover-popup-plant" class="popup !transform-none"></div>
-
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
-                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/",
-                "gsap": "https://unpkg.com/gsap@3.12.5/index.js"
-            }
+    // Load and execute the Three.js script
+    const loadScript = () => {
+      // Create import map
+      const importMap = document.createElement('script');
+      importMap.type = 'importmap';
+      importMap.textContent = JSON.stringify({
+        imports: {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/",
+          "gsap": "https://unpkg.com/gsap@3.12.5/index.js"
         }
-    </script>
+      });
+      document.head.appendChild(importMap);
 
-    <script type="module">
+      // Create the main script
+      const script = document.createElement('script');
+      script.type = 'module';
+      script.textContent = `
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
         import gsap from 'gsap';
@@ -219,9 +156,6 @@ const Farm = () => {
         const confirmationSection = document.getElementById('confirmation-section');
         const confirmPlantNameEl = document.getElementById('confirm-plant-name');
         const confirmActionButton = document.getElementById('confirm-action-button');
-        const cartItemsList = document.getElementById('cart-items-list');
-        const cartPlaceholder = document.getElementById('cart-placeholder');
-        const checkoutForm = document.getElementById('checkout-form');
 
         // --- Basic Setup ---
         const scene = new THREE.Scene();
@@ -282,17 +216,26 @@ const Farm = () => {
         window.addEventListener('mousemove', onMouseMove);
         canvasContainer.addEventListener('click', onCanvasClick);
         backButton.addEventListener('click', () => { if (currentView === 'detail') transitionToGridView(); });
-        confirmActionButton.addEventListener('click', handlePlantAction);
-        clearCartButton.addEventListener('click', clearCart);
-        checkoutForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if(cart.size === 0) {
-                alert("Your cart is empty!");
-                return;
+        if (confirmActionButton) confirmActionButton.addEventListener('click', handlePlantAction);
+        
+        // Listen for cart events from external components
+        window.addEventListener('quantityChanged', (event) => {
+          const { id, quantity } = event.detail;
+          if (quantity === 0) {
+            // Remove from cart when quantity reaches 0
+            if (cart.has(id)) {
+              cart.delete(id);
+              updateFarmState(id, false);
             }
-            alert("Thank you for your order! (This is a demo)");
-            clearCart();
-            checkoutForm.reset();
+          }
+        });
+        
+        window.addEventListener('removeFromCart', (event) => {
+          const { id } = event.detail;
+          if (cart.has(id)) {
+            cart.delete(id);
+            updateFarmState(id, false);
+          }
         });
         
         function onMouseMove(event) {
@@ -300,8 +243,8 @@ const Farm = () => {
             mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
             mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
             
-            hoverPopupPlantEl.style.left = `${event.clientX}px`;
-            hoverPopupPlantEl.style.top = `${event.clientY}px`;
+            hoverPopupPlantEl.style.left = \`\${event.clientX}px\`;
+            hoverPopupPlantEl.style.top = \`\${event.clientY}px\`;
         }
         
         window.addEventListener('resize', () => {
@@ -313,7 +256,7 @@ const Farm = () => {
         function onCanvasClick() {
             if (currentView === 'grid') {
                 if (hoveredInstanceId !== null && !instanceData[hoveredInstanceId].isBlocked) {
-                    selectionStatusEl.textContent = `Selected: Container ${hoveredInstanceId}`;
+                    selectionStatusEl.textContent = \`Selected: Container \${hoveredInstanceId}\`;
                     transitionToDetailView(hoveredInstanceId);
                 }
             } else if (currentView === 'detail') {
@@ -336,22 +279,19 @@ const Farm = () => {
 
         // --- Cart and UI Logic ---
         function updateCartUI() {
-            cartCountEl.textContent = cart.size;
-            cartItemsList.innerHTML = '';
-            if (cart.size === 0) {
-                cartPlaceholder.classList.remove('hidden');
-            } else {
-                cartPlaceholder.classList.add('hidden');
-                cart.forEach(uniqueId => {
-                    const plant = plantObjects[uniqueId];
-                    if (plant) {
-                        const li = document.createElement('li');
-                        li.textContent = `${plant.userData.name} (Container ${uniqueId.split('-')[0]})`;
-                        li.className = 'text-green-200';
-                        cartItemsList.appendChild(li);
-                    }
-                });
-            }
+            // Update external cart via custom event
+            const cartData = Array.from(cart).map(uniqueId => {
+                const plant = plantObjects[uniqueId];
+                return plant ? {
+                    id: uniqueId,
+                    name: plant.userData.name,
+                    container: uniqueId.split('-')[0]
+                } : null;
+            }).filter(Boolean);
+            
+            window.dispatchEvent(new CustomEvent('farmCartUpdate', { 
+                detail: { cart: cartData, count: cart.size } 
+            }));
         }
 
         function handlePlantAction() {
