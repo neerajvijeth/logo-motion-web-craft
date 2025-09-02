@@ -84,22 +84,11 @@ export const FarmInteractive = () => {
         pointer-events: none;
         transform: translate(15px, 15px);
       }
-      .form-input {
-        background-color: #052e16;
-        border: 1px solid #065f46;
-        color: #ecfdf5;
-      }
-      .form-input:focus {
-        outline: none;
-        border-color: #34d399;
-        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.5);
-      }
     `;
     document.head.appendChild(style);
 
     // Load and execute the Three.js script
     const loadScript = () => {
-      // Create import map
       const importMap = document.createElement('script');
       importMap.type = 'importmap';
       importMap.textContent = JSON.stringify({
@@ -111,33 +100,30 @@ export const FarmInteractive = () => {
       });
       document.head.appendChild(importMap);
 
-      // Create the main script
       const script = document.createElement('script');
       script.type = 'module';
-      script.textContent = `
+      script.innerHTML = \`
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
         import gsap from 'gsap';
 
-        // --- Configuration ---
         const CONFIG = {
-            NUM_COLS: 50,
-            NUM_ROWS: 20,
-            BLOCK_SIZE: 1.5,
-            BLOCK_SPACING: 0.5,
-            get BLOCK_HEIGHT() { return this.BLOCK_SIZE * 5 },
-            NUM_PLANT_ROWS: 5,
-            NUM_PLANTS_PER_ROW: 25,
-            COLORS: ["#10B981", "#6EE7B7"].map(c => new THREE.Color(c)),
-            HIGHLIGHT_COLOR: new THREE.Color("#BEF264"),
-            BLOCKED_COLOR: new THREE.Color("#4B5563"),
-            SELECTED_COLOR: new THREE.Color("#FACC15"),
-            SOLD_PLANT_COLOR: new THREE.Color("#000000"),
-            BLOCKED_CONTAINERS: [15, 28],
-            BLOCKED_PLANTS: ['58-2-4', '58-3-1', '100-0-8', '100-4-24','101-3-2'],
+          NUM_COLS: 50,
+          NUM_ROWS: 20,
+          BLOCK_SIZE: 1.5,
+          BLOCK_SPACING: 0.5,
+          get BLOCK_HEIGHT() { return this.BLOCK_SIZE * 5 },
+          NUM_PLANT_ROWS: 5,
+          NUM_PLANTS_PER_ROW: 25,
+          COLORS: ["#10B981", "#6EE7B7"].map(c => new THREE.Color(c)),
+          HIGHLIGHT_COLOR: new THREE.Color("#BEF264"),
+          BLOCKED_COLOR: new THREE.Color("#4B5563"),
+          SELECTED_COLOR: new THREE.Color("#FACC15"),
+          SOLD_PLANT_COLOR: new THREE.Color("#000000"),
+          BLOCKED_CONTAINERS: [15, 28],
+          BLOCKED_PLANTS: ['58-2-4', '58-3-1', '100-0-8', '100-4-24','101-3-2'],
         };
 
-        // --- State Management ---
         const cart = new Set();
         let plantObjects = {};
         let currentView = 'grid'; 
@@ -146,18 +132,11 @@ export const FarmInteractive = () => {
         let detailGroup = null;
         let clickedPlant = null;
 
-        // --- DOM Element References ---
         const canvasContainer = document.getElementById('canvas-container');
         const selectionStatusEl = document.getElementById('selection-status');
         const backButton = document.getElementById('back-button');
-        const cartCountEl = document.getElementById('cart-count');
-        const clearCartButton = document.getElementById('clear-cart-button');
         const hoverPopupPlantEl = document.getElementById('hover-popup-plant');
-        const confirmationSection = document.getElementById('confirmation-section');
-        const confirmPlantNameEl = document.getElementById('confirm-plant-name');
-        const confirmActionButton = document.getElementById('confirm-action-button');
 
-        // --- Basic Setup ---
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x064e3b);
         const camera = new THREE.PerspectiveCamera(75, canvasContainer.clientWidth / canvasContainer.clientHeight, 0.1, 1000);
@@ -179,14 +158,12 @@ export const FarmInteractive = () => {
         directionalLight.position.set(50, 50, 50);
         scene.add(directionalLight);
 
-        // --- Instanced Mesh Setup ---
         const totalInstances = CONFIG.NUM_COLS * CONFIG.NUM_ROWS;
         const geometry = new THREE.BoxGeometry(CONFIG.BLOCK_SIZE, CONFIG.BLOCK_HEIGHT, CONFIG.BLOCK_SIZE);
         const material = new THREE.MeshStandardMaterial({ roughness: 0.6, metalness: 0.2, transparent: true });
         const instancedMesh = new THREE.InstancedMesh(geometry, material, totalInstances);
         scene.add(instancedMesh);
 
-        // --- Instance Data Setup ---
         const instanceData = [];
         const dummy = new THREE.Object3D();
         let instanceIdx = 0;
@@ -194,459 +171,276 @@ export const FarmInteractive = () => {
         const totalDepth = CONFIG.NUM_ROWS * (CONFIG.BLOCK_SIZE + CONFIG.BLOCK_SPACING);
 
         for (let row = 0; row < CONFIG.NUM_ROWS; row++) {
-            for (let col = 0; col < CONFIG.NUM_COLS; col++) {
-                const x = col * (CONFIG.BLOCK_SIZE + CONFIG.BLOCK_SPACING) - totalWidth / 2;
-                const z = row * (CONFIG.BLOCK_SIZE + CONFIG.BLOCK_SPACING) - totalDepth / 2;
-                dummy.position.set(x, CONFIG.BLOCK_HEIGHT / 2, z);
-                dummy.updateMatrix();
-                instancedMesh.setMatrixAt(instanceIdx, dummy.matrix);
-                const isBlocked = CONFIG.BLOCKED_CONTAINERS.includes(instanceIdx);
-                const color = isBlocked ? CONFIG.BLOCKED_COLOR : CONFIG.COLORS[(col + row) % 2];
-                instancedMesh.setColorAt(instanceIdx, color);
-                instanceData[instanceIdx] = { isBlocked, originalColor: color, hasSelection: false };
-                instanceIdx++;
-            }
+          for (let col = 0; col < CONFIG.NUM_COLS; col++) {
+            const x = col * (CONFIG.BLOCK_SIZE + CONFIG.BLOCK_SPACING) - totalWidth / 2;
+            const z = row * (CONFIG.BLOCK_SIZE + CONFIG.BLOCK_SPACING) - totalDepth / 2;
+            dummy.position.set(x, CONFIG.BLOCK_HEIGHT / 2, z);
+            dummy.updateMatrix();
+            instancedMesh.setMatrixAt(instanceIdx, dummy.matrix);
+            const isBlocked = CONFIG.BLOCKED_CONTAINERS.includes(instanceIdx);
+            const color = isBlocked ? CONFIG.BLOCKED_COLOR : CONFIG.COLORS[(col + row) % 2];
+            instancedMesh.setColorAt(instanceIdx, color);
+            instanceData[instanceIdx] = { isBlocked, originalColor: color, hasSelection: false };
+            instanceIdx++;
+          }
         }
         instancedMesh.instanceMatrix.needsUpdate = true;
         instancedMesh.instanceColor.needsUpdate = true;
-        
-        // --- Event Listeners ---
-        const raycaster = new THREE.Raycaster();
-        const mouse = new THREE.Vector2();
-        window.addEventListener('mousemove', onMouseMove);
-        canvasContainer.addEventListener('click', onCanvasClick);
-        backButton.addEventListener('click', () => { if (currentView === 'detail') transitionToGridView(); });
-        if (confirmActionButton) confirmActionButton.addEventListener('click', handlePlantAction);
-        
-        // Listen for cart events from external components
-        window.addEventListener('quantityChanged', (event) => {
-          const { id, quantity } = event.detail;
-          if (quantity === 0) {
-            // Remove from cart when quantity reaches 0
-            if (cart.has(id)) {
-              cart.delete(id);
-              updateFarmState(id, false);
-            }
-          }
-        });
-        
-        window.addEventListener('removeFromCart', (event) => {
-          const { id } = event.detail;
-          if (cart.has(id)) {
-            cart.delete(id);
-            updateFarmState(id, false);
-          }
-        });
-        
-        function onMouseMove(event) {
-            const rect = canvasContainer.getBoundingClientRect();
-            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-            
-            hoverPopupPlantEl.style.left = \`\${event.clientX}px\`;
-            hoverPopupPlantEl.style.top = \`\${event.clientY}px\`;
-        }
-        
-        window.addEventListener('resize', () => {
-            camera.aspect = canvasContainer.clientWidth / canvasContainer.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
-        });
 
-        function onCanvasClick() {
-            if (currentView === 'grid') {
-                if (hoveredInstanceId !== null && !instanceData[hoveredInstanceId].isBlocked) {
-                    selectionStatusEl.textContent = \`Selected: Container \${hoveredInstanceId}\`;
-                    transitionToDetailView(hoveredInstanceId);
-                }
-            } else if (currentView === 'detail') {
-                const intersects = raycaster.intersectObjects(detailGroup.plants);
-                if (intersects.length > 0) {
-                    const newClickedPlant = intersects[0].object;
-                    if (newClickedPlant.userData.isBlocked) return;
-                    if (clickedPlant && clickedPlant !== newClickedPlant && !cart.has(clickedPlant.userData.uniqueId)) {
-                         revertPlantColor(clickedPlant);
-                    }
-                    clickedPlant = newClickedPlant;
-                    if (!cart.has(clickedPlant.userData.uniqueId)) {
-                        clickedPlant.material.color.set(CONFIG.SELECTED_COLOR);
-                        clickedPlant.material.emissive.set(CONFIG.SELECTED_COLOR);
-                    }
-                    showConfirmationUI(clickedPlant);
-                }
-            }
-        }
-
-        // --- Cart and UI Logic ---
-        function updateCartUI() {
-            // Update external cart via custom event
-            const cartData = Array.from(cart).map(uniqueId => {
-                const plant = plantObjects[uniqueId];
-                return plant ? {
-                    id: uniqueId,
-                    name: plant.userData.name,
-                    container: uniqueId.split('-')[0]
-                } : null;
-            }).filter(Boolean);
-            
-            window.dispatchEvent(new CustomEvent('farmCartUpdate', { 
-                detail: { cart: cartData, count: cart.size } 
-            }));
-        }
-
-        function handlePlantAction() {
-            const uniqueId = confirmActionButton.dataset.plantId;
-            if (!uniqueId) return;
-            if (cart.has(uniqueId)) {
-                deselectPlant(uniqueId);
-            } else {
-                selectPlant(uniqueId);
-            }
-            confirmationSection.classList.add('hidden');
-            clickedPlant = null;
-        }
-
-        function selectPlant(uniqueId) {
-            cart.add(uniqueId);
-            const [instanceIdStr] = uniqueId.split('-');
-            const instanceId = parseInt(instanceIdStr, 10);
-            const plantMesh = plantObjects[uniqueId];
-            if (plantMesh) {
-                plantMesh.material.color.set(CONFIG.SELECTED_COLOR);
-                plantMesh.material.emissive.set(CONFIG.SELECTED_COLOR);
-            }
-            instanceData[instanceId].hasSelection = true;
-            updateContainerColor(instanceId);
-            updateCartUI();
-        }
-
-        function deselectPlant(uniqueId) {
-            cart.delete(uniqueId);
-            const [instanceIdStr] = uniqueId.split('-');
-            const instanceId = parseInt(instanceIdStr, 10);
-            revertPlantColor(plantObjects[uniqueId]);
-
-            let hasOtherSelection = false;
-            for (const id of cart) {
-                if (id.startsWith(\`\${instanceId}-\`)) {
-                    hasOtherSelection = true;
-                    break;
-                }
-            }
-            instanceData[instanceId].hasSelection = hasOtherSelection;
-            updateContainerColor(instanceId);
-            updateCartUI();
-        }
-        
-        function revertPlantColor(plant) {
-            if (plant && !plant.userData.isBlocked) {
-                plant.material.color.set(0x84cc16);
-                plant.material.emissive.set(plant.originalEmissive);
-            }
-        }
-
-        function clearCart() {
-            cart.forEach(uniqueId => {
-                const [instanceIdStr] = uniqueId.split('-');
-                const instanceId = parseInt(instanceIdStr, 10);
-                instanceData[instanceId].hasSelection = false;
-                updateContainerColor(instanceId);
-            });
-            if (currentView === 'detail' && detailGroup) {
-                detailGroup.plants.forEach(plant => {
-                    if (cart.has(plant.userData.uniqueId)) {
-                        revertPlantColor(plant);
-                    }
-                });
-            }
-            cart.clear();
-            updateCartUI();
-            confirmationSection.classList.add('hidden');
-            clickedPlant = null;
-        }
-
-        function updateContainerColor(id) {
-            if (id === null) return;
-            const data = instanceData[id];
-            const color = data.hasSelection ? CONFIG.SELECTED_COLOR : data.originalColor;
-            instancedMesh.setColorAt(id, color);
-            instancedMesh.instanceColor.needsUpdate = true;
-        }
-
-        // --- View Transitions ---
-        function createDetailView(instanceId, position, color) {
-            detailGroup = new THREE.Group();
-            detailGroup.position.copy(position);
-            detailGroup.plants = [];
-            plantObjects = {};
-
-            const shellGeo = new THREE.BoxGeometry(CONFIG.BLOCK_SIZE, CONFIG.BLOCK_HEIGHT, CONFIG.BLOCK_SIZE);
-            const shellMat = new THREE.MeshStandardMaterial({ color, transparent: true, opacity: 0 });
-            const shell = new THREE.Mesh(shellGeo, shellMat);
-            shell.visible = false;
-            detailGroup.add(shell);
-
-            const plantGeo = new THREE.SphereGeometry(CONFIG.BLOCK_SIZE * 0.1, 8, 6);
-            const plantMat = new THREE.MeshStandardMaterial({ color: 0x84cc16, roughness: 0.8 });
-            
-            const rowHeight = CONFIG.BLOCK_HEIGHT / CONFIG.NUM_PLANT_ROWS;
-            
-            const numPlants = CONFIG.NUM_PLANTS_PER_ROW;
-            const plantDiameter = CONFIG.BLOCK_SIZE * 0.2;
-            const fixedGap = CONFIG.BLOCK_SIZE * 0.15;
-            const totalRowWidth = (numPlants * plantDiameter) + (Math.max(0, numPlants - 1) * fixedGap);
-            const startX = -totalRowWidth / 2;
-
-            for (let r = 0; r < CONFIG.NUM_PLANT_ROWS; r++) {
-                for (let p = 0; p < numPlants; p++) {
-                    const plant = new THREE.Mesh(plantGeo, plantMat.clone());
-                    plant.material.opacity = 0;
-                    const y = (r * rowHeight) - (CONFIG.BLOCK_HEIGHT / 2) + (rowHeight / 2);
-                    const x = startX + (plantDiameter / 2) + (p * (plantDiameter + fixedGap));
-                    plant.position.set(x, y, 0);
-                    
-                    const uniqueId = \`\${instanceId}-\${r}-\${p}\`;
-                    const isBlocked = CONFIG.BLOCKED_PLANTS.includes(uniqueId);
-                    plant.userData = { name: \`Basil - R\${r+1}, P\${p+1}\`, uniqueId, isBlocked };
-                    plant.originalEmissive = plant.material.emissive.getHex();
-
-                    if (isBlocked) {
-                        plant.material.color.set(CONFIG.SOLD_PLANT_COLOR);
-                        plant.material.emissive.set(CONFIG.SOLD_PLANT_COLOR);
-                    } else if (cart.has(uniqueId)) {
-                        plant.material.color.set(CONFIG.SELECTED_COLOR);
-                        plant.material.emissive.set(CONFIG.SELECTED_COLOR);
-                    }
-
-                    detailGroup.add(plant);
-                    detailGroup.plants.push(plant);
-                    plantObjects[uniqueId] = plant;
-                }
-            }
-            scene.add(detailGroup);
-            updateCartUI();
-        }
-
-        function transitionToDetailView(instanceId) {
-            currentView = 'detail';
-            controls.enabled = false;
-
-            const matrix = new THREE.Matrix4();
-            instancedMesh.getMatrixAt(instanceId, matrix);
-            const position = new THREE.Vector3().setFromMatrixPosition(matrix);
-            const color = instanceData[instanceId].originalColor;
-
-            createDetailView(instanceId, position, color);
-
-            const tl = gsap.timeline();
-            tl.to(instancedMesh.material, { opacity: 0, duration: 0.5 })
-              .to(camera.position, { x: position.x, y: position.y, z: position.z + CONFIG.BLOCK_HEIGHT * 1.5, duration: 1, ease: 'power3.inOut' }, 0)
-              .to(controls.target, { x: position.x, y: position.y, z: position.z, duration: 1, ease: 'power3.inOut', onComplete: () => backButton.classList.remove('opacity-0', 'pointer-events-none') }, 0);
-            
-            detailGroup.plants.forEach(plant => {
-                gsap.to(plant.material, { opacity: 1, duration: 0.5, delay: 0.3 });
-            });
-        }
-
-        function transitionToGridView() {
-            currentView = 'transitioning'; 
-            backButton.classList.add('opacity-0', 'pointer-events-none');
-            confirmationSection.classList.add('hidden');
-            selectionStatusEl.textContent = '';
-            
-            if (clickedPlant && !cart.has(clickedPlant.userData.uniqueId)) {
-                revertPlantColor(clickedPlant);
-            }
-            clickedPlant = null;
-
-            if (detailGroup) {
-                gsap.to(detailGroup.children.map(c => c.material), {
-                    opacity: 0, duration: 0.5,
-                    onComplete: () => {
-                        if (detailGroup) {
-                            detailGroup.traverse(obj => { if (obj.isMesh) { obj.geometry.dispose(); if(obj.material?.dispose) obj.material.dispose(); }});
-                            scene.remove(detailGroup);
-                            detailGroup = null;
-                            plantObjects = {};
-                        }
-                    }
-                });
-            }
-
-            const tl = gsap.timeline({ onComplete: () => { controls.target.set(0, 0, 0); controls.enabled = true; controls.update(); currentView = 'grid'; }});
-            tl.to(camera.position, { ...initialCameraPosition, duration: 1.2, ease: 'power3.inOut' }, 0)
-              .to(controls.target, { x: 0, y: 0, z: 0, duration: 1.2, ease: 'power3.inOut' }, 0)
-              .to(instancedMesh.material, { opacity: 1, duration: 0.5, delay: 0.2 }, 0);
-        }
-        
-        function showConfirmationUI(plant) {
-            if (plant) {
-                confirmationSection.classList.remove('hidden');
-                const isSelected = cart.has(plant.userData.uniqueId);
-                
-                confirmPlantNameEl.textContent = plant.userData.name;
-                confirmActionButton.dataset.plantId = plant.userData.uniqueId;
-                confirmActionButton.textContent = isSelected ? "Confirm Deselection" : "Confirm Selection";
-                confirmActionButton.className = \`mt-2 w-full text-white font-bold py-2 px-4 rounded transition-colors \${isSelected ? 'bg-rose-500 hover:bg-rose-400' : 'bg-green-500 hover:bg-green-400'}\`;
-            }
-        }
-
-        // --- Animation Loop ---
         function animate() {
-            requestAnimationFrame(animate);
-            controls.update();
-            raycaster.setFromCamera(mouse, camera);
-
-            if (controls.enabled && currentView === 'grid') {
-                const intersects = raycaster.intersectObject(instancedMesh);
-                if (intersects.length > 0) {
-                    const instanceId = intersects[0].instanceId;
-                    const data = instanceData[instanceId];
-                    if (hoveredInstanceId !== instanceId) {
-                        updateContainerColor(hoveredInstanceId);
-                        hoveredInstanceId = instanceId;
-                        if (!data.isBlocked) {
-                           instancedMesh.setColorAt(hoveredInstanceId, CONFIG.HIGHLIGHT_COLOR);
-                           instancedMesh.instanceColor.needsUpdate = true;
-                        }
-                    }
-                } else {
-                    if (hoveredInstanceId !== null) {
-                        updateContainerColor(hoveredInstanceId);
-                        hoveredInstanceId = null;
-                    }
-                }
-            } else if (currentView === 'detail' && detailGroup) {
-                const plantIntersects = raycaster.intersectObjects(detailGroup.plants);
-                const currentHoveredPlant = plantIntersects.length > 0 ? plantIntersects[0].object : null;
-
-                if (hoveredPlant !== currentHoveredPlant) {
-                    if (hoveredPlant && hoveredPlant !== clickedPlant && !cart.has(hoveredPlant.userData.uniqueId)) {
-                        revertPlantColor(hoveredPlant);
-                    }
-                    hoveredPlant = currentHoveredPlant;
-                    if (hoveredPlant && hoveredPlant !== clickedPlant && !cart.has(hoveredPlant.userData.uniqueId)) {
-                        hoveredPlant.material.emissive.set(CONFIG.HIGHLIGHT_COLOR);
-                    }
-                }
-                
-                if(hoveredPlant) {
-                    hoverPopupPlantEl.innerHTML = \`<p class="font-bold text-white">\${hoveredPlant.userData.isBlocked ? 'Sold' : hoveredPlant.userData.name}</p>\`;
-                    hoverPopupPlantEl.style.display = 'block';
-                } else {
-                    hoverPopupPlantEl.style.display = 'none';
-                }
-            }
-            
-            renderer.render(scene, camera);
+          requestAnimationFrame(animate);
+          controls.update();
+          renderer.render(scene, camera);
         }
-
-        function playIntroAnimation() {
-            controls.enabled = false;
-            const tl = gsap.timeline({ onComplete: () => { controls.enabled = true; }});
-            tl.to(camera.position, { x: 80, y: 60, z: 80, duration: 2.5, ease: 'power3.inOut', delay: 0.5 })
-              .to(camera.position, { ...initialCameraPosition, duration: 2.5, ease: 'power3.inOut', delay: 0.5 });
-        }
-        
         animate();
-        playIntroAnimation();
-
-    </script>
-
-</body>
-</html>
-    `;
-
-    // Set iframe content
-    iframe.onload = () => {
-      iframe.contentDocument?.open();
-      iframe.contentDocument?.write(htmlContent);
-      iframe.contentDocument?.close();
+      \`;
+      document.body.appendChild(script);
     };
 
-    // Append iframe to container
-    containerRef.current.appendChild(iframe);
+    setTimeout(loadScript, 100);
 
-    // Cleanup
     return () => {
-      if (containerRef.current?.contains(iframe)) {
-        containerRef.current.removeChild(iframe);
-      }
+      const styles = document.querySelectorAll('style');
+      styles.forEach(style => {
+        if (style.textContent?.includes('.popup')) {
+          style.remove();
+        }
+      });
+      
+      const scripts = document.querySelectorAll('script[type="module"], script[type="importmap"]');
+      scripts.forEach(script => {
+        if (script.textContent?.includes('three') || script.textContent?.includes('CONFIG')) {
+          script.remove();
+        }
+      });
     };
   }, []);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-foreground">Loading...</h2>
+  return (
+    <div 
+      ref={containerRef}
+      className="bg-green-950 text-white min-h-screen"
+      style={{
+        fontFamily: 'Inter, sans-serif'
+      }}
+    />
+  );
+};
+
+export const CartHeader = () => {
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    const handleCartUpdate = (event: CustomEvent) => {
+      setCartCount(event.detail.count);
+    };
+
+    window.addEventListener('farmCartUpdate', handleCartUpdate as EventListener);
+    return () => window.removeEventListener('farmCartUpdate', handleCartUpdate as EventListener);
+  }, []);
+
+  return (
+    <div className="flex items-center justify-between bg-card/50 rounded-lg p-4 mb-6 animate-fade-in">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground">eRefresh Farm</h2>
+        <p className="text-muted-foreground">Fresh Vertical Farming</p>
+      </div>
+      <div className="flex items-center gap-2">
+        <ShoppingCart className="h-5 w-5 text-primary" />
+        {cartCount > 0 && (
+          <span className="bg-primary text-primary-foreground rounded-full px-2 py-1 text-sm min-w-[1.5rem] h-6 flex items-center justify-center animate-scale-in">
+            {cartCount}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export const CartItemCard = ({ item, onQuantityChange, onRemove }: {
+  item: CartItem;
+  onQuantityChange: (id: string, quantity: number) => void;
+  onRemove: (id: string) => void;
+}) => {
+  const quantity = item.quantity || 1;
+
+  return (
+    <Card className="mb-4 hover-scale transition-all duration-300 hover:shadow-lg border-primary/20 hover:border-primary/40">
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img 
+              src="https://images.unsplash.com/photo-1628155930542-3c7efd202dc5?w=48&h=48&fit=crop&crop=center" 
+              alt="Basil plant" 
+              className="w-12 h-12 rounded-full object-cover border-2 border-primary/30"
+            />
+            <div>
+              <h3 className="font-semibold text-foreground">{item.name}</h3>
+              <p className="text-sm text-muted-foreground">Container {item.container}</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <div className="flex items-center border border-primary/30 rounded-lg bg-primary/5">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => quantity > 1 ? onQuantityChange(item.id, quantity - 1) : onRemove(item.id)}
+                className="h-8 w-8 p-0 hover:bg-primary/10 hover:text-primary"
+              >
+                <Minus className="h-4 w-4" />
+              </Button>
+              <span className="px-3 py-1 text-sm font-medium min-w-[2rem] text-center text-primary">
+                {quantity}
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onQuantityChange(item.id, quantity + 1)}
+                className="h-8 w-8 p-0 hover:bg-primary/10 hover:text-primary"
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+            <span className="text-lg font-bold text-primary">₹15</span>
+          </div>
         </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export const CartSection = () => {
+  const [cartState, setCartState] = useState<CartState>({ items: [], count: 0 });
+
+  useEffect(() => {
+    const handleCartUpdate = (event: CustomEvent) => {
+      const { cart, count } = event.detail;
+      setCartState(prevState => {
+        const itemsWithQuantity = cart.map((item: CartItem) => {
+          const existingItem = prevState.items.find(existing => existing.id === item.id);
+          return {
+            ...item,
+            quantity: existingItem?.quantity || 1
+          };
+        });
+        return { items: itemsWithQuantity, count };
+      });
+    };
+
+    window.addEventListener('farmCartUpdate', handleCartUpdate as EventListener);
+    return () => window.removeEventListener('farmCartUpdate', handleCartUpdate as EventListener);
+  }, []);
+
+  const handleQuantityChange = (id: string, quantity: number) => {
+    setCartState(prev => ({
+      ...prev,
+      items: prev.items.map(item => 
+        item.id === id ? { ...item, quantity } : item
+      )
+    }));
+    
+    window.dispatchEvent(new CustomEvent('quantityChanged', { 
+      detail: { id, quantity } 
+    }));
+  };
+
+  const handleRemoveItem = (id: string) => {
+    setCartState(prev => ({
+      ...prev,
+      items: prev.items.filter(item => item.id !== id),
+      count: prev.count - 1
+    }));
+    
+    window.dispatchEvent(new CustomEvent('removeFromCart', { 
+      detail: { id } 
+    }));
+  };
+
+  const handleClearCart = () => {
+    setCartState({ items: [], count: 0 });
+    window.dispatchEvent(new CustomEvent('clearFarmCart'));
+  };
+
+  const total = cartState.items.reduce((sum, item) => sum + (item.quantity || 1) * 15, 0);
+
+  if (cartState.items.length === 0) {
+    return (
+      <div className="max-w-4xl mx-auto px-4">
+        <Card className="hover-scale transition-all duration-300 border-primary/20">
+          <CardContent className="p-8 text-center animate-fade-in">
+            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <ShoppingCart className="h-8 w-8 text-primary" />
+            </div>
+            <h3 className="text-lg font-semibold mb-2 text-foreground">Your cart is empty</h3>
+            <p className="text-muted-foreground">Click on a container in the farm above to start selecting plants!</p>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
-  if (!user) {
-    return null;
-  }
+  return (
+    <div className="max-w-4xl mx-auto px-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 animate-fade-in">
+          <h2 className="text-2xl font-bold mb-4 text-foreground">Your Cart</h2>
+          {cartState.items.map((item, index) => (
+            <div key={item.id} style={{ animationDelay: `${index * 100}ms` }} className="animate-fade-in">
+              <CartItemCard
+                item={item}
+                onQuantityChange={handleQuantityChange}
+                onRemove={handleRemoveItem}
+              />
+            </div>
+          ))}
+          <Button 
+            variant="outline" 
+            onClick={handleClearCart}
+            className="w-full mt-4 border-primary/30 text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300"
+          >
+            Clear Cart
+          </Button>
+        </div>
+        
+        <div className="lg:col-span-1 animate-fade-in" style={{ animationDelay: '200ms' }}>
+          <Card className="hover-scale transition-all duration-300 border-primary/20 hover:border-primary/40 hover:shadow-lg">
+            <CardContent className="p-6">
+              <h3 className="text-lg font-semibold mb-4 text-foreground">Order Summary</h3>
+              <div className="space-y-2 mb-4">
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Items ({cartState.count})</span>
+                  <span className="text-primary font-medium">₹{total}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Delivery</span>
+                  <span className="text-primary font-medium">Free</span>
+                </div>
+                <hr className="my-2 border-primary/20" />
+                <div className="flex justify-between font-semibold">
+                  <span className="text-foreground">Total</span>
+                  <span className="text-primary">₹{total}</span>
+                </div>
+              </div>
+              <Button className="w-full bg-primary hover:bg-card hover:text-foreground hover:border hover:border-primary transition-all duration-300">
+                Proceed to Checkout
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+};
 
+const Farm = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Header />
-      <main className="pt-20">
-        <div className="px-4 sm:px-6 lg:px-8 py-8">
-          {/* Hero Section */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground">
-              Interactive <span className="text-primary">Vertical Farm</span>
-            </h1>
-            <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-              Experience the future of agriculture with our cutting-edge vertical farming technology. 
-              Explore our interactive 3D farm and discover sustainable growing methods.
-            </p>
-          </div>
-
-          {/* 3D Farm Container */}
-          <div className="w-full max-w-6xl mx-auto">
-            <div 
-              ref={containerRef} 
-              className="w-full h-[600px] rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-green-900 to-green-800"
-            />
-          </div>
-
-          {/* Features Grid */}
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <div className="text-center p-6 rounded-lg bg-card border border-border">
-              <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
-                <div className="w-8 h-8 bg-primary rounded" />
-              </div>
-              <h3 className="text-xl font-semibold text-foreground mb-2">Vertical Growing</h3>
-              <p className="text-muted-foreground">
-                Maximize space efficiency with our innovative vertical growing systems that produce more in less space.
-              </p>
-            </div>
-            
-            <div className="text-center p-6 rounded-lg bg-card border border-border">
-              <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
-                <div className="w-8 h-8 bg-primary rounded-full" />
-              </div>
-              <h3 className="text-xl font-semibold text-foreground mb-2">Smart Monitoring</h3>
-              <p className="text-muted-foreground">
-                AI-powered sensors monitor plant health, nutrition, and growth in real-time for optimal yields.
-              </p>
-            </div>
-            
-            <div className="text-center p-6 rounded-lg bg-card border border-border">
-              <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
-                <div className="w-8 h-8 bg-primary rounded-lg" />
-              </div>
-              <h3 className="text-xl font-semibold text-foreground mb-2">Sustainable Future</h3>
-              <p className="text-muted-foreground">
-                Reduce water usage by 95% and eliminate pesticides while growing fresh produce year-round.
-              </p>
-            </div>
-          </div>
-        </div>
-      </main>
+      <div className="py-8 space-y-8">
+        <CartHeader />
+        <FarmInteractive />
+        <CartSection />
+      </div>
     </div>
   );
 };
