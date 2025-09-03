@@ -33,7 +33,7 @@ export const FarmInteractive = () => {
         <!-- Main Interactive Section -->
         <main class="relative">
           <!-- 3D Canvas Card -->
-          <div class="w-full max-w-4xl mx-auto h-[500px] rounded-xl overflow-hidden shadow-lg border border-green-800">
+          <div class="w-full max-w-6xl mx-auto aspect-video rounded-xl overflow-hidden shadow-2xl shadow-green-900/50 border-2 border-green-800">
              <div id="canvas-container"></div>
           </div>
          
@@ -107,23 +107,25 @@ export const FarmInteractive = () => {
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
         import gsap from 'gsap';
 
+        // --- Configuration ---
         const CONFIG = {
-          NUM_COLS: 50,
-          NUM_ROWS: 20,
-          BLOCK_SIZE: 1.5,
-          BLOCK_SPACING: 0.5,
-          get BLOCK_HEIGHT() { return this.BLOCK_SIZE * 5 },
-          NUM_PLANT_ROWS: 5,
-          NUM_PLANTS_PER_ROW: 25,
-          COLORS: ["#10B981", "#6EE7B7"].map(c => new THREE.Color(c)),
-          HIGHLIGHT_COLOR: new THREE.Color("#BEF264"),
-          BLOCKED_COLOR: new THREE.Color("#4B5563"),
-          SELECTED_COLOR: new THREE.Color("#FACC15"),
-          SOLD_PLANT_COLOR: new THREE.Color("#000000"),
-          BLOCKED_CONTAINERS: [15, 28],
-          BLOCKED_PLANTS: ['58-2-4', '58-3-1', '100-0-8', '100-4-24','101-3-2'],
+            NUM_COLS: 50,
+            NUM_ROWS: 20,
+            BLOCK_SIZE: 1.5,
+            BLOCK_SPACING: 0.5,
+            get BLOCK_HEIGHT() { return this.BLOCK_SIZE * 5 },
+            NUM_PLANT_ROWS: 5,
+            NUM_PLANTS_PER_ROW: 25,
+            COLORS: ["#10B981", "#6EE7B7"].map(c => new THREE.Color(c)),
+            HIGHLIGHT_COLOR: new THREE.Color("#BEF264"),
+            BLOCKED_COLOR: new THREE.Color("#4B5563"),
+            SELECTED_COLOR: new THREE.Color("#FACC15"),
+            SOLD_PLANT_COLOR: new THREE.Color("#000000"),
+            BLOCKED_CONTAINERS: [15, 28],
+            BLOCKED_PLANTS: ['58-2-4', '58-3-1', '100-0-8', '100-4-24','101-3-2'],
         };
 
+        // --- State Management ---
         const cart = new Set();
         let plantObjects = {};
         let currentView = 'grid'; 
@@ -132,11 +134,13 @@ export const FarmInteractive = () => {
         let detailGroup = null;
         let clickedPlant = null;
 
+        // --- DOM Element References ---
         const canvasContainer = document.getElementById('canvas-container');
         const selectionStatusEl = document.getElementById('selection-status');
         const backButton = document.getElementById('back-button');
         const hoverPopupPlantEl = document.getElementById('hover-popup-plant');
 
+        // --- Basic Setup ---
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x064e3b);
         const camera = new THREE.PerspectiveCamera(75, canvasContainer.clientWidth / canvasContainer.clientHeight, 0.1, 1000);
@@ -158,12 +162,14 @@ export const FarmInteractive = () => {
         directionalLight.position.set(50, 50, 50);
         scene.add(directionalLight);
 
+        // --- Instanced Mesh Setup ---
         const totalInstances = CONFIG.NUM_COLS * CONFIG.NUM_ROWS;
         const geometry = new THREE.BoxGeometry(CONFIG.BLOCK_SIZE, CONFIG.BLOCK_HEIGHT, CONFIG.BLOCK_SIZE);
         const material = new THREE.MeshStandardMaterial({ roughness: 0.6, metalness: 0.2, transparent: true });
         const instancedMesh = new THREE.InstancedMesh(geometry, material, totalInstances);
         scene.add(instancedMesh);
 
+        // --- Instance Data Setup ---
         const instanceData = [];
         const dummy = new THREE.Object3D();
         let instanceIdx = 0;
@@ -171,28 +177,326 @@ export const FarmInteractive = () => {
         const totalDepth = CONFIG.NUM_ROWS * (CONFIG.BLOCK_SIZE + CONFIG.BLOCK_SPACING);
 
         for (let row = 0; row < CONFIG.NUM_ROWS; row++) {
-          for (let col = 0; col < CONFIG.NUM_COLS; col++) {
-            const x = col * (CONFIG.BLOCK_SIZE + CONFIG.BLOCK_SPACING) - totalWidth / 2;
-            const z = row * (CONFIG.BLOCK_SIZE + CONFIG.BLOCK_SPACING) - totalDepth / 2;
-            dummy.position.set(x, CONFIG.BLOCK_HEIGHT / 2, z);
-            dummy.updateMatrix();
-            instancedMesh.setMatrixAt(instanceIdx, dummy.matrix);
-            const isBlocked = CONFIG.BLOCKED_CONTAINERS.includes(instanceIdx);
-            const color = isBlocked ? CONFIG.BLOCKED_COLOR : CONFIG.COLORS[(col + row) % 2];
-            instancedMesh.setColorAt(instanceIdx, color);
-            instanceData[instanceIdx] = { isBlocked, originalColor: color, hasSelection: false };
-            instanceIdx++;
-          }
+            for (let col = 0; col < CONFIG.NUM_COLS; col++) {
+                const x = col * (CONFIG.BLOCK_SIZE + CONFIG.BLOCK_SPACING) - totalWidth / 2;
+                const z = row * (CONFIG.BLOCK_SIZE + CONFIG.BLOCK_SPACING) - totalDepth / 2;
+                dummy.position.set(x, CONFIG.BLOCK_HEIGHT / 2, z);
+                dummy.updateMatrix();
+                instancedMesh.setMatrixAt(instanceIdx, dummy.matrix);
+                const isBlocked = CONFIG.BLOCKED_CONTAINERS.includes(instanceIdx);
+                const color = isBlocked ? CONFIG.BLOCKED_COLOR : CONFIG.COLORS[(col + row) % 2];
+                instancedMesh.setColorAt(instanceIdx, color);
+                instanceData[instanceIdx] = { isBlocked, originalColor: color, hasSelection: false };
+                instanceIdx++;
+            }
         }
         instancedMesh.instanceMatrix.needsUpdate = true;
         instancedMesh.instanceColor.needsUpdate = true;
-
-        function animate() {
-          requestAnimationFrame(animate);
-          controls.update();
-          renderer.render(scene, camera);
+        
+        // --- Event Listeners ---
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        window.addEventListener('mousemove', onMouseMove);
+        canvasContainer.addEventListener('click', onCanvasClick);
+        backButton.addEventListener('click', () => { if (currentView === 'detail') transitionToGridView(); });
+        
+        function onMouseMove(event) {
+            const rect = canvasContainer.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+            
+            hoverPopupPlantEl.style.left = event.clientX + 'px';
+            hoverPopupPlantEl.style.top = event.clientY + 'px';
         }
+        
+        window.addEventListener('resize', () => {
+            camera.aspect = canvasContainer.clientWidth / canvasContainer.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
+        });
+
+        function onCanvasClick() {
+            if (currentView === 'grid') {
+                if (hoveredInstanceId !== null && !instanceData[hoveredInstanceId].isBlocked) {
+                    selectionStatusEl.textContent = 'Selected: Container ' + hoveredInstanceId;
+                    transitionToDetailView(hoveredInstanceId);
+                }
+            } else if (currentView === 'detail') {
+                const intersects = raycaster.intersectObjects(detailGroup.plants);
+                if (intersects.length > 0) {
+                    const newClickedPlant = intersects[0].object;
+                    if (newClickedPlant.userData.isBlocked) return;
+                    
+                    if (cart.has(newClickedPlant.userData.uniqueId)) {
+                        deselectPlant(newClickedPlant.userData.uniqueId);
+                    } else {
+                        selectPlant(newClickedPlant.userData.uniqueId);
+                    }
+                }
+            }
+        }
+
+        // --- Cart and UI Logic ---
+        function updateCartUI() {
+            // Update external cart via custom event
+            const cartData = Array.from(cart).map(uniqueId => {
+                const plant = plantObjects[uniqueId];
+                return plant ? {
+                    id: uniqueId,
+                    name: plant.userData.name,
+                    container: uniqueId.split('-')[0]
+                } : null;
+            }).filter(Boolean);
+            
+            window.dispatchEvent(new CustomEvent('farmCartUpdate', { 
+                detail: { cart: cartData, count: cart.size } 
+            }));
+        }
+
+        function selectPlant(uniqueId) {
+            cart.add(uniqueId);
+            const instanceIdParts = uniqueId.split('-');
+            const instanceId = parseInt(instanceIdParts[0], 10);
+            const plantMesh = plantObjects[uniqueId];
+            if (plantMesh) {
+                plantMesh.material.color.set(CONFIG.SELECTED_COLOR);
+                plantMesh.material.emissive.set(CONFIG.SELECTED_COLOR);
+            }
+            instanceData[instanceId].hasSelection = true;
+            updateContainerColor(instanceId);
+            updateCartUI();
+        }
+
+        function deselectPlant(uniqueId) {
+            cart.delete(uniqueId);
+            const instanceIdParts = uniqueId.split('-');
+            const instanceId = parseInt(instanceIdParts[0], 10);
+            revertPlantColor(plantObjects[uniqueId]);
+
+            let hasOtherSelection = false;
+            for (const id of cart) {
+                if (id.startsWith(instanceId + '-')) {
+                    hasOtherSelection = true;
+                    break;
+                }
+            }
+            instanceData[instanceId].hasSelection = hasOtherSelection;
+            updateContainerColor(instanceId);
+            updateCartUI();
+        }
+        
+        function revertPlantColor(plant) {
+            if (plant && !plant.userData.isBlocked) {
+                plant.material.color.set(0x84cc16);
+                plant.material.emissive.set(plant.originalEmissive);
+            }
+        }
+
+        function clearCart() {
+            cart.forEach(uniqueId => {
+                const instanceIdParts = uniqueId.split('-');
+                const instanceId = parseInt(instanceIdParts[0], 10);
+                instanceData[instanceId].hasSelection = false;
+                updateContainerColor(instanceId);
+            });
+            if (currentView === 'detail' && detailGroup) {
+                detailGroup.plants.forEach(plant => {
+                    if (cart.has(plant.userData.uniqueId)) {
+                        revertPlantColor(plant);
+                    }
+                });
+            }
+            cart.clear();
+            updateCartUI();
+        }
+        
+        // Listen for external clear cart events
+        window.addEventListener('clearFarmCart', clearCart);
+        
+        // Listen for cart events from external components
+        window.addEventListener('quantityChanged', (event) => {
+          const { id, quantity } = event.detail;
+          if (quantity === 0) {
+            if (cart.has(id)) {
+              deselectPlant(id);
+            }
+          }
+        });
+        
+        window.addEventListener('removeFromCart', (event) => {
+          const { id } = event.detail;
+          if (cart.has(id)) {
+            deselectPlant(id);
+          }
+        });
+
+        function updateContainerColor(id) {
+            if (id === null) return;
+            const data = instanceData[id];
+            const color = data.hasSelection ? CONFIG.SELECTED_COLOR : data.originalColor;
+            instancedMesh.setColorAt(id, color);
+            instancedMesh.instanceColor.needsUpdate = true;
+        }
+
+        // --- View Transitions ---
+        function createDetailView(instanceId, position, color) {
+            detailGroup = new THREE.Group();
+            detailGroup.position.copy(position);
+            detailGroup.plants = [];
+            plantObjects = {};
+
+            const shellGeo = new THREE.BoxGeometry(CONFIG.BLOCK_SIZE, CONFIG.BLOCK_HEIGHT, CONFIG.BLOCK_SIZE);
+            const shellMat = new THREE.MeshStandardMaterial({ color, transparent: true, opacity: 0 });
+            const shell = new THREE.Mesh(shellGeo, shellMat);
+            shell.visible = false;
+            detailGroup.add(shell);
+
+            const plantGeo = new THREE.SphereGeometry(CONFIG.BLOCK_SIZE * 0.1, 8, 6);
+            const plantMat = new THREE.MeshStandardMaterial({ color: 0x84cc16, roughness: 0.8 });
+            
+            const rowHeight = CONFIG.BLOCK_HEIGHT / CONFIG.NUM_PLANT_ROWS;
+            
+            const numPlants = CONFIG.NUM_PLANTS_PER_ROW;
+            const plantDiameter = CONFIG.BLOCK_SIZE * 0.2;
+            const fixedGap = CONFIG.BLOCK_SIZE * 0.15;
+            const totalRowWidth = (numPlants * plantDiameter) + (Math.max(0, numPlants - 1) * fixedGap);
+            const startX = -totalRowWidth / 2;
+
+            for (let r = 0; r < CONFIG.NUM_PLANT_ROWS; r++) {
+                for (let p = 0; p < numPlants; p++) {
+                    const plant = new THREE.Mesh(plantGeo, plantMat.clone());
+                    plant.material.opacity = 0;
+                    const y = (r * rowHeight) - (CONFIG.BLOCK_HEIGHT / 2) + (rowHeight / 2);
+                    const x = startX + (plantDiameter / 2) + (p * (plantDiameter + fixedGap));
+                    plant.position.set(x, y, 0);
+                    
+                    const uniqueId = instanceId + '-' + r + '-' + p;
+                    const isBlocked = CONFIG.BLOCKED_PLANTS.includes(uniqueId);
+                    plant.userData = { name: 'Basil - R' + (r+1) + ', P' + (p+1), uniqueId, isBlocked };
+                    plant.originalEmissive = plant.material.emissive.getHex();
+
+                    if (isBlocked) {
+                        plant.material.color.set(CONFIG.SOLD_PLANT_COLOR);
+                        plant.material.emissive.set(CONFIG.SOLD_PLANT_COLOR);
+                    } else if (cart.has(uniqueId)) {
+                        plant.material.color.set(CONFIG.SELECTED_COLOR);
+                        plant.material.emissive.set(CONFIG.SELECTED_COLOR);
+                    }
+
+                    detailGroup.add(plant);
+                    detailGroup.plants.push(plant);
+                    plantObjects[uniqueId] = plant;
+                }
+            }
+            scene.add(detailGroup);
+            updateCartUI();
+        }
+
+        function transitionToDetailView(instanceId) {
+            currentView = 'detail';
+            controls.enabled = false;
+
+            const matrix = new THREE.Matrix4();
+            instancedMesh.getMatrixAt(instanceId, matrix);
+            const position = new THREE.Vector3().setFromMatrixPosition(matrix);
+            const color = instanceData[instanceId].originalColor;
+
+            createDetailView(instanceId, position, color);
+
+            const tl = gsap.timeline();
+            tl.to(instancedMesh.material, { opacity: 0, duration: 0.5 })
+              .to(camera.position, { x: position.x, y: position.y, z: position.z + CONFIG.BLOCK_HEIGHT * 1.5, duration: 1, ease: 'power3.inOut' }, 0)
+              .to(controls.target, { x: position.x, y: position.y, z: position.z, duration: 1, ease: 'power3.inOut', onComplete: () => backButton.classList.remove('opacity-0', 'pointer-events-none') }, 0);
+            
+            detailGroup.plants.forEach(plant => {
+                gsap.to(plant.material, { opacity: 1, duration: 0.5, delay: 0.3 });
+            });
+        }
+
+        function transitionToGridView() {
+            currentView = 'transitioning'; 
+            backButton.classList.add('opacity-0', 'pointer-events-none');
+            selectionStatusEl.textContent = '';
+            
+            if (detailGroup) {
+                gsap.to(detailGroup.children.map(c => c.material), {
+                    opacity: 0, duration: 0.5,
+                    onComplete: () => {
+                        if (detailGroup) {
+                            detailGroup.traverse(obj => { if (obj.isMesh) { obj.geometry.dispose(); if(obj.material && obj.material.dispose) obj.material.dispose(); }});
+                            scene.remove(detailGroup);
+                            detailGroup = null;
+                            plantObjects = {};
+                        }
+                    }
+                });
+            }
+
+            const tl = gsap.timeline({ onComplete: () => { controls.target.set(0, 0, 0); controls.enabled = true; controls.update(); currentView = 'grid'; }});
+            tl.to(camera.position, { x: initialCameraPosition.x, y: initialCameraPosition.y, z: initialCameraPosition.z, duration: 1.2, ease: 'power3.inOut' }, 0)
+              .to(controls.target, { x: 0, y: 0, z: 0, duration: 1.2, ease: 'power3.inOut' }, 0)
+              .to(instancedMesh.material, { opacity: 1, duration: 0.5, delay: 0.2 }, 0);
+        }
+
+        // --- Animation Loop ---
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            raycaster.setFromCamera(mouse, camera);
+
+            if (controls.enabled && currentView === 'grid') {
+                const intersects = raycaster.intersectObject(instancedMesh);
+                if (intersects.length > 0) {
+                    const instanceId = intersects[0].instanceId;
+                    const data = instanceData[instanceId];
+                    if (hoveredInstanceId !== instanceId) {
+                        updateContainerColor(hoveredInstanceId);
+                        hoveredInstanceId = instanceId;
+                        if (!data.isBlocked) {
+                           instancedMesh.setColorAt(hoveredInstanceId, CONFIG.HIGHLIGHT_COLOR);
+                           instancedMesh.instanceColor.needsUpdate = true;
+                        }
+                    }
+                } else {
+                    if (hoveredInstanceId !== null) {
+                        updateContainerColor(hoveredInstanceId);
+                        hoveredInstanceId = null;
+                    }
+                }
+            } else if (currentView === 'detail' && detailGroup) {
+                const plantIntersects = raycaster.intersectObjects(detailGroup.plants);
+                const currentHoveredPlant = plantIntersects.length > 0 ? plantIntersects[0].object : null;
+
+                if (hoveredPlant !== currentHoveredPlant) {
+                    if (hoveredPlant && !cart.has(hoveredPlant.userData.uniqueId)) {
+                        revertPlantColor(hoveredPlant);
+                    }
+                    hoveredPlant = currentHoveredPlant;
+                    if (hoveredPlant && !cart.has(hoveredPlant.userData.uniqueId)) {
+                        hoveredPlant.material.emissive.set(CONFIG.HIGHLIGHT_COLOR);
+                    }
+                }
+                
+                if(hoveredPlant) {
+                    hoverPopupPlantEl.innerHTML = '<p class="font-bold text-white">' + (hoveredPlant.userData.isBlocked ? 'Sold' : hoveredPlant.userData.name) + '</p>';
+                    hoverPopupPlantEl.style.display = 'block';
+                } else {
+                    hoverPopupPlantEl.style.display = 'none';
+                }
+            }
+            
+            renderer.render(scene, camera);
+        }
+
+        function playIntroAnimation() {
+            controls.enabled = false;
+            const tl = gsap.timeline({ onComplete: () => { controls.enabled = true; }});
+            tl.to(camera.position, { x: 80, y: 60, z: 80, duration: 2.5, ease: 'power3.inOut', delay: 0.5 })
+              .to(camera.position, { x: initialCameraPosition.x, y: initialCameraPosition.y, z: initialCameraPosition.z, duration: 2.5, ease: 'power3.inOut', delay: 0.5 });
+        }
+        
         animate();
+        playIntroAnimation();
       `;
       document.body.appendChild(script);
     };
@@ -386,7 +690,7 @@ export const CartSection = () => {
         <div className="lg:col-span-2 animate-fade-in">
           <h2 className="text-2xl font-bold mb-4 text-foreground">Your Cart</h2>
           {cartState.items.map((item, index) => (
-            <div key={item.id} style={{ animationDelay: `${index * 100}ms` }} className="animate-fade-in">
+            <div key={item.id} style={{ animationDelay: (index * 100) + 'ms' }} className="animate-fade-in">
               <CartItemCard
                 item={item}
                 onQuantityChange={handleQuantityChange}
