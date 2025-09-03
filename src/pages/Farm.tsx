@@ -102,7 +102,7 @@ export const FarmInteractive = () => {
 
       const script = document.createElement('script');
       script.type = 'module';
-      script.innerHTML = \`
+      script.innerHTML = `
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
         import gsap from 'gsap';
@@ -193,7 +193,7 @@ export const FarmInteractive = () => {
           renderer.render(scene, camera);
         }
         animate();
-      \`;
+      `;
       document.body.appendChild(script);
     };
 
