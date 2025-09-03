@@ -21,7 +21,7 @@ export const FarmInteractive = () => {
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Create and inject the farm HTML content
+    // Create and inject the farm HTML content with improved styling
     const farmHTML = `
       <div class="container mx-auto p-4 sm:p-8">
         <!-- Header -->
@@ -45,6 +45,60 @@ export const FarmInteractive = () => {
             Back to Grid
           </button>
         </main>
+
+        <!-- Cart and Checkout Section -->
+        <section class="mt-12 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            <!-- Cart -->
+            <div class="bg-green-900/50 border border-green-800 rounded-xl p-6">
+                <h2 class="text-2xl font-bold text-green-100 border-b border-green-700 pb-3 mb-4">Your Cart</h2>
+                <div id="cart-summary" class="flex justify-between items-center text-lg mb-4">
+                    <span>Total Items:</span>
+                    <span id="cart-count" class="font-bold text-lime-400">0</span>
+                </div>
+                
+                <ul id="cart-items-list" class="space-y-2 h-48 overflow-y-auto pr-2">
+                    <!-- Cart items will be dynamically added here -->
+                     <p id="cart-placeholder" class="text-green-300">Your cart is empty. Click on a container to start selecting plants!</p>
+                </ul>
+                <button id="clear-cart-button" class="mt-4 w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-2 px-4 rounded-lg shadow-lg transition-colors">
+                    Clear Cart
+                </button>
+            </div>
+
+            <!-- Checkout -->
+            <div class="bg-green-900/50 border border-green-800 rounded-xl p-6">
+                <h2 class="text-2xl font-bold text-green-100 border-b border-green-700 pb-3 mb-4">Checkout</h2>
+                <form id="checkout-form">
+                    <div class="space-y-4">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-green-200">Full Name</label>
+                            <input type="text" id="name" name="name" class="form-input mt-1 block w-full rounded-md shadow-sm" required>
+                        </div>
+                        <div>
+                            <label for="address" class="block text-sm font-medium text-green-200">Delivery Address</label>
+                            <input type="text" id="address" name="address" class="form-input mt-1 block w-full rounded-md shadow-sm" required>
+                        </div>
+                        <div>
+                            <label for="card-number" class="block text-sm font-medium text-green-200">Card Number</label>
+                            <input type="text" id="card-number" name="card-number" class="form-input mt-1 block w-full rounded-md shadow-sm" placeholder="•••• •••• •••• ••••" required>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="expiry" class="block text-sm font-medium text-green-200">Expiry (MM/YY)</label>
+                                <input type="text" id="expiry" name="expiry" class="form-input mt-1 block w-full rounded-md shadow-sm" placeholder="MM/YY" required>
+                            </div>
+                            <div>
+                                <label for="cvv" class="block text-sm font-medium text-green-200">CVV</label>
+                                <input type="text" id="cvv" name="cvv" class="form-input mt-1 block w-full rounded-md shadow-sm" placeholder="•••" required>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="mt-6 w-full bg-lime-600 hover:bg-lime-500 text-white font-bold py-3 px-4 rounded-lg shadow-lg text-lg transition-colors">
+                        Place Order
+                    </button>
+                </form>
+            </div>
+        </section>
       </div>
 
       <!-- Popups for 3D Scene -->
@@ -138,7 +192,12 @@ export const FarmInteractive = () => {
         const canvasContainer = document.getElementById('canvas-container');
         const selectionStatusEl = document.getElementById('selection-status');
         const backButton = document.getElementById('back-button');
+        const cartCountEl = document.getElementById('cart-count');
+        const clearCartButton = document.getElementById('clear-cart-button');
         const hoverPopupPlantEl = document.getElementById('hover-popup-plant');
+        const cartItemsList = document.getElementById('cart-items-list');
+        const cartPlaceholder = document.getElementById('cart-placeholder');
+        const checkoutForm = document.getElementById('checkout-form');
 
         // --- Basic Setup ---
         const scene = new THREE.Scene();
@@ -199,6 +258,17 @@ export const FarmInteractive = () => {
         window.addEventListener('mousemove', onMouseMove);
         canvasContainer.addEventListener('click', onCanvasClick);
         backButton.addEventListener('click', () => { if (currentView === 'detail') transitionToGridView(); });
+        if (clearCartButton) clearCartButton.addEventListener('click', clearCart);
+        if (checkoutForm) checkoutForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if(cart.size === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+            alert("Thank you for your order! (This is a demo)");
+            clearCart();
+            checkoutForm.reset();
+        });
         
         function onMouseMove(event) {
             const rect = canvasContainer.getBoundingClientRect();
@@ -238,7 +308,27 @@ export const FarmInteractive = () => {
 
         // --- Cart and UI Logic ---
         function updateCartUI() {
-            // Update external cart via custom event
+            // Update both internal DOM and external React cart
+            if (cartCountEl) cartCountEl.textContent = cart.size;
+            if (cartItemsList) {
+                cartItemsList.innerHTML = '';
+                if (cart.size === 0) {
+                    if (cartPlaceholder) cartPlaceholder.classList.remove('hidden');
+                } else {
+                    if (cartPlaceholder) cartPlaceholder.classList.add('hidden');
+                    cart.forEach(uniqueId => {
+                        const plant = plantObjects[uniqueId];
+                        if (plant) {
+                            const li = document.createElement('li');
+                            li.textContent = plant.userData.name + ' (Container ' + uniqueId.split('-')[0] + ')';
+                            li.className = 'text-green-200';
+                            cartItemsList.appendChild(li);
+                        }
+                    });
+                }
+            }
+            
+            // Update external React cart via custom event
             const cartData = Array.from(cart).map(uniqueId => {
                 const plant = plantObjects[uniqueId];
                 return plant ? {
