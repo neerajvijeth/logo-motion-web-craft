@@ -8,7 +8,7 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const { user, signOut } = useAuth();
+  const { user, signOut, loading } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -74,7 +74,7 @@ const Header = () => {
             >
               Contact
             </a>
-            {user ? (
+            {(!loading && user) ? (
               <Button
                 onClick={handleSignOut}
                 variant="outline"
@@ -138,7 +138,7 @@ const Header = () => {
                 { href: '/', label: 'Home', isActive: isActivePage('/') },
                 { href: '/about', label: 'About', isActive: isActivePage('/about') },
                 { href: '/contact', label: 'Contact', isActive: isActivePage('/contact') },
-                ...(user ? [{ href: '#', label: 'Logout', isActive: false, isLogout: true }] : [
+                ...((!loading && user) ? [{ href: '#', label: 'Logout', isActive: false, isLogout: true }] : [
                   { href: '/auth', label: 'Login', isActive: isActivePage('/auth') },
                   { href: '/auth?mode=signup', label: 'Sign Up', isActive: isActivePage('/auth'), isSignUp: true }
                 ])
