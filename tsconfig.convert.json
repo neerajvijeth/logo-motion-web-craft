@@ -1,0 +1,12 @@
+{
+  "include": [
+    "src/**/*"
+  ],
+  "compilerOptions": {
+    "outDir": "./dist-js",
+    "jsx": "preserve",
+    "target": "ES2020",
+    "module": "esnext",
+    "noEmit": false
+  }
+}
