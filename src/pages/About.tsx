@@ -1,5 +1,6 @@
-import Header from '@/components/Header.jsx';
-import Footer from '@/components/Footer.jsx';
+
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import { Users, Target, Award, Globe, CheckCircle, TrendingUp, Lightbulb, Heart } from 'lucide-react';
 
 const About = () => {

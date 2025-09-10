@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
-import Header from '@/components/Header.jsx';
+import Header from '@/components/Header';
 
 const Farm = () => {
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -374,30 +374,39 @@ const Farm = () => {
                           hoverPopupPlantEl.style.display = 'none';
                       }
                   }
+                  
                   renderer.render(scene, camera);
               }
 
-              animate();
-
-              // Resize handler
+              // --- Responsive Design ---
               window.addEventListener('resize', () => {
                   camera.aspect = window.innerWidth / window.innerHeight;
                   camera.updateProjectionMatrix();
                   renderer.setSize(window.innerWidth, window.innerHeight);
               });
+
+              animate();
           </script>
+
       </body>
       </html>
     `;
 
-    // Create iframe and inject HTML
+    // Create iframe and inject the content
     const iframe = document.createElement('iframe');
     iframe.style.width = '100%';
-    iframe.style.height = '100vh';
+    iframe.style.height = '100%';
     iframe.style.border = 'none';
-    iframe.srcdoc = farmHTML;
     
     containerRef.current.appendChild(iframe);
+    
+    // Write the content to iframe
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (iframeDoc) {
+      iframeDoc.open();
+      iframeDoc.write(farmHTML);
+      iframeDoc.close();
+    }
 
     return () => {
       if (containerRef.current && iframe) {
@@ -407,10 +416,63 @@ const Farm = () => {
   }, []);
 
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-green-100">
       <Header />
-      <div ref={containerRef} style={{ height: 'calc(100vh - 80px)' }} />
-    </>
+      
+      {/* Hero Section */}
+      <div className="relative pt-20 pb-8 px-4">
+        <div className="max-w-6xl mx-auto text-center">
+          <div className="animate-fade-in">
+            <h1 className="text-5xl md:text-6xl font-bold text-gray-800 mb-6">
+              Interactive <span className="text-green-600">Farm Experience</span>
+            </h1>
+            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+              Explore our cutting-edge vertical farming technology. Click and interact with each growing container to see our crops in action.
+            </p>
+          </div>
+          
+          {/* Farm Container */}
+          <div className="relative mx-auto animate-fade-in delay-200">
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-green-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-4">
+                <h2 className="text-2xl font-bold">3D Interactive Farm</h2>
+                <p className="text-green-100">Click containers to explore • Drag to rotate • Scroll to zoom</p>
+              </div>
+              <div 
+                ref={containerRef}
+                className="w-full h-[500px] md:h-[600px] bg-gradient-to-br from-green-800 to-emerald-800"
+                style={{ position: 'relative' }}
+              />
+            </div>
+          </div>
+          
+          {/* Features Grid */}
+          <div className="mt-16 grid md:grid-cols-3 gap-8 max-w-4xl mx-auto animate-fade-in delay-400">
+            <div className="bg-white/60 backdrop-blur-sm rounded-xl p-6 border border-green-200">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🌱</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">Hydroponic Growing</h3>
+              <p className="text-gray-600">Soil-free growing system with optimal nutrient delivery</p>
+            </div>
+            <div className="bg-white/60 backdrop-blur-sm rounded-xl p-6 border border-green-200">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🏗️</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">Vertical Design</h3>
+              <p className="text-gray-600">Maximized growing space in minimal footprint</p>
+            </div>
+            <div className="bg-white/60 backdrop-blur-sm rounded-xl p-6 border border-green-200">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🤖</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">AI Automation</h3>
+              <p className="text-gray-600">Smart monitoring and automated care systems</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
