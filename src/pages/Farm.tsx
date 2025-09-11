@@ -1,11 +1,21 @@
 import { useEffect, useRef } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 
 const Farm = () => {
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!loading && !user) {
+      navigate('/auth');
+    }
+  }, [user, loading, navigate]);
+
+  useEffect(() => {
+    if (!user || !containerRef.current) return;
 
     // Create and inject the 3D farm content
     const farmHTML = `
@@ -413,7 +423,19 @@ const Farm = () => {
         containerRef.current.removeChild(iframe);
       }
     };
-  }, []);
+  }, [user]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-green-100">
